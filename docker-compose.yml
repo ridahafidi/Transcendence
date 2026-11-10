@@ -1,0 +1,17 @@
+services:
+  nginx:
+    image: nginx:stable-alpine3.24-slim
+    ports: [ "8080:80" ]
+    volumes: [ "./srcs/nginx/default.conf:/etc/nginx/conf.d/default.conf" ]
+
+  frontend:
+    build: srcs/frontend
+    command: tail -f /dev/null
+
+  backend:
+    build: srcs/backend
+    command: tail -f /dev/null
+
+  db:
+    build: srcs/db
+    command: tail -f /dev/null
