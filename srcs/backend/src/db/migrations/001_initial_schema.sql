@@ -25,29 +25,8 @@ CREATE TABLE oauth_accounts (
     UNIQUE (provider, provider_user_id)
 );
 
-CREATE TABLE organizations (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
-    slug VARCHAR(150) NOT NULL UNIQUE,
-    description TEXT,
-    logo_file_id BIGINT,
-    owner_id BIGINT NOT NULL REFERENCES users(id),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE organization_members (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    organization_id BIGINT NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    org_role VARCHAR(50) NOT NULL DEFAULT 'MEMBER'
-        CHECK (org_role IN ('OWNER', 'MANAGER', 'MEMBER', 'VIEWER')),
-    joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    UNIQUE (organization_id, user_id)
-);
-
 CREATE TABLE workspaces (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    organization_id BIGINT NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     name VARCHAR(150) NOT NULL,
     description TEXT,
     created_by BIGINT NOT NULL REFERENCES users(id),
@@ -127,7 +106,7 @@ CREATE TABLE files (
     size_bytes BIGINT NOT NULL CHECK (size_bytes >= 0),
     storage_path TEXT NOT NULL,
     visibility VARCHAR(50) NOT NULL DEFAULT 'PRIVATE'
-        CHECK (visibility IN ('PRIVATE', 'WORKSPACE', 'ORG')),
+        CHECK (visibility IN ('PRIVATE', 'WORKSPACE')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -157,7 +136,6 @@ CREATE TABLE api_keys (
 CREATE TABLE activity_logs (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id BIGINT REFERENCES users(id) ON DELETE SET NULL,
-    organization_id BIGINT REFERENCES organizations(id) ON DELETE SET NULL,
     action VARCHAR(100) NOT NULL,
     entity_type VARCHAR(100),
     entity_id BIGINT,
@@ -172,23 +150,11 @@ ALTER TABLE users
     REFERENCES files(id)
     ON DELETE SET NULL;
 
-ALTER TABLE organizations
-    ADD CONSTRAINT fk_organizations_logo_file
-    FOREIGN KEY (logo_file_id)
-    REFERENCES files(id)
-    ON DELETE SET NULL;
-
 CREATE INDEX idx_oauth_accounts_user_id
     ON oauth_accounts(user_id);
 
-CREATE INDEX idx_organization_members_user_id
-    ON organization_members(user_id);
-
 CREATE INDEX idx_workspace_members_user_id
     ON workspace_members(user_id);
-
-CREATE INDEX idx_workspaces_organization_id
-    ON workspaces(organization_id);
 
 CREATE INDEX idx_tasks_workspace_status
     ON tasks(workspace_id, status);
@@ -219,6 +185,3 @@ CREATE INDEX idx_notifications_user_read
 
 CREATE INDEX idx_activity_logs_created_at
     ON activity_logs(created_at);
-
-CREATE INDEX idx_activity_logs_organization_id
-    ON activity_logs(organization_id);
