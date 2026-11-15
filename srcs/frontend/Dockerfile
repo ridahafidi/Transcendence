@@ -8,4 +8,4 @@ RUN npm ci
 
 COPY . .
 
-ENTRYPOINT npm run dev
+ENTRYPOINT npm run dev -- --host 0.0.0.0
