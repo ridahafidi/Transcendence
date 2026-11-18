@@ -1,4 +1,5 @@
 import { oauthConfig }  from '../../../config/oauth.ts';
+import { randomBytes } from 'node:crypto';
 
 interface TokenResponse {
     access_token : string;
@@ -9,8 +10,20 @@ interface TokenResponse {
     created_at : number;
 }
 
+interface UserProfile{
+    id: number;
+    login: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    url: string;
+    image: {
+        link: string;
+    };
+}
+
 function isTokenResponse(data: unknown): data is TokenResponse 
-{
+{    
     if (typeof data === 'object' && data !== null && !Array.isArray(data))
     {
         const tokenResponse = data as Record<string, unknown>;
@@ -57,6 +70,60 @@ export async function exchangeAuthorizationCode(code: string): Promise<TokenResp
 
     if (!isTokenResponse(data)) {
         throw new Error('42 returned an unexpected token response');
+    }
+
+    return data;
+}
+
+function isUserProfile(data: unknown): data is UserProfile {
+    
+    if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+        return false;
+    }
+    const userProfile = data as Record<string, unknown>;
+    const image = userProfile.image;
+    if(!image || typeof image !== 'object' || image === null || Array.isArray(image)) {
+        return false;
+    }
+    const imageData = image as Record<string, unknown>;
+
+    if (typeof data === 'object' && data != null && !Array.isArray(data))
+    {
+        const userProfile = data as Record<string, unknown>;
+        return (
+            typeof userProfile.id === 'number' &&
+            typeof userProfile.login === 'string' &&
+            typeof userProfile.email === 'string' &&
+            typeof userProfile.first_name === 'string' &&
+            typeof userProfile.last_name === 'string' &&
+            typeof userProfile.url === 'string' &&
+            typeof imageData.link === 'string'
+        )
+    }
+    return false;
+}
+
+export async function get42UserProfile(accessToken: string): Promise<UserProfile>{
+    const response = await fetch("https://api.intra.42.fr/v2/me",{
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    })
+
+    let data: unknown;
+    try
+    {
+        data = await response.json();
+    }
+    catch(error)
+    {
+        throw new Error(`42 returned invalid JSON (HTTP ${response.status})`);
+    }
+    if (!response.ok){
+        throw new Error("Failed to fetch user profile from 42 API");
+    }
+    if (!isUserProfile(data)){
+        throw new Error("42 returned an unexpected user profile response");
     }
 
     return data;
