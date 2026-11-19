@@ -1,5 +1,6 @@
 import { oauthConfig }  from '../../../config/oauth.ts';
 import { randomBytes } from 'node:crypto';
+import {find42Account, create42Account} from '../repositories/oauth.repository.ts';
 
 interface TokenResponse {
     access_token : string;
@@ -20,6 +21,16 @@ interface UserProfile{
     image: {
         link: string;
     };
+}
+
+export async function resolve42User(profile: UserProfile){
+    const existingUser = await find42Account(String(profile.id));
+
+    if (existingUser) {
+        return existingUser;
+    }
+
+    return await create42Account(profile);
 }
 
 function isTokenResponse(data: unknown): data is TokenResponse 

@@ -2,6 +2,7 @@ import { randomBytes } from 'node:crypto';
 import type { Request, Response } from 'express';
 import { oauthConfig } from '../../config/oauth.ts';
 import { exchangeAuthorizationCode, get42UserProfile } from './services/42-oauth.service.ts';
+import { resolve42User } from './services/42-oauth.service.ts';
 
 export function handle42Callback(req: Request, res: Response): void {
     const { code, state } = req.query;
@@ -28,8 +29,10 @@ export function handle42Callback(req: Request, res: Response): void {
                 return get42UserProfile(tokenResponse.access_token);
             })
             .then((userProfile) => {
-                // Do something with the user profile, e.g., create a new user or update an existing one
-                res.json(userProfile);
+                return resolve42User(userProfile);
+            })
+            .then((user) => {
+                res.json(user);
             })
             .catch((error) => {
                 console.error('Error occurred while fetching 42 user profile:', error);
