@@ -1,9 +1,9 @@
 *This project has been created as part of the 42 curriculum by iboubkri, aezghari, yelouam, rhafidi.*
 
-# TaskFlow: Collaborative Workspace Platform
+# NEXA: Collaborative Workspace Platform
 
 ## Description
-TaskFlow is a comprehensive collaborative workspace and task management platform. Our goal is to provide teams with a unified environment for real-time communication, file sharing, and organizational management. Key features include real-time chat, role-based access control (RBAC), organization/workspace separation, an advanced analytics dashboard, and secure file management. 
+NEXA is a comprehensive collaborative workspace and task management platform. Our goal is to provide teams with a unified environment for real-time communication, file sharing, and organizational management. Key features include real-time chat, role-based access control (RBAC), organization/workspace separation, an advanced analytics dashboard, and secure file management. 
 
 ## Instructions
 **Prerequisites:**
