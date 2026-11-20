@@ -2,10 +2,12 @@ FROM node:26-alpine3.24
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 
 RUN npm ci
 
 COPY . .
 
-ENTRYPOINT npm run dev
+EXPOSE 3000
+
+ENTRYPOINT ["npm", "run", "dev"]
