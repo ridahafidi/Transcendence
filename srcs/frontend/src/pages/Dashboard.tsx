@@ -1,4 +1,5 @@
 import Button from "../components/Button"
+
 const features = [
     { title: 'Workspaces and tasks', description: 'Kanban boards for every team' },
     { title: 'Real-time chat', description: 'Direct messages and channels' },
@@ -6,99 +7,35 @@ const features = [
     { title: 'Analytics and API', description: 'Insights and a public REST API' },
 ]
 
+
 const previewBars = [44, 73, 56, 100, 69, 37, 86]
 
-function LDashboard() {
+function DashboardPreview({ className }) {
     return (
-        <div className="landing">
-            <header className="site-header">
-                <a className="wordmark" href="/">&#47;&#47; NEXA</a>
-                <nav className="site-nav" aria-label="Main navigation">
-                    <a href="#features">Features</a>
-                    <a href="/developer">Developer</a>
-                    <a className="action action-outline" href="/login">Log in</a>
-                    <a className="action action-primary" href="/register">Get started</a>
-                </nav>
-            </header>
+        <figure className={`${className} text-page`}>
+            <figcaption className="text-xs font-semibold uppercase tracking-wider text-page">
+                Dashboard preview
+            </figcaption>
 
-            <main className="landing-content">
-                <section className="hero" aria-labelledby="landing-title">
-                    <div className="hero-copy">
-                        <h1 id="landing-title">
-                            Simplified Systems,
-                            <span>Superior Results.</span>
-                        </h1>
-                        <p>
-                            Tasks, chat, files and analytics for small businesses, in one
-                            real-time workspace your whole team can use at the same time.
-                        </p>
-                        <div className="hero-actions">
-                            <a className="action action-primary" href="/register">Get started</a>
-                            <a className="action action-secondary" href="/login">Continue with 42</a>
-                        </div>
-                    </div>
-
-                    <figure className="dashboard-preview">
-                        <figcaption>Dashboard preview</figcaption>
-                        <div className="dashboard-content">
-                            <div className="preview-chart" aria-hidden="true">
-                                {previewBars.map((height) => (
-                                    <span key={height} style={{ height: `${height}%` }} />
-                                ))}
-                            </div>
-                            <dl className="preview-stats">
-                                <div>
-                                    <dt>Active</dt>
-                                    <dd>128</dd>
-                                </div>
-                                <div>
-                                    <dt>Done</dt>
-                                    <dd>342</dd>
-                                </div>
-                            </dl>
-                        </div>
-                    </figure>
-                </section>
-
-                <ul className="feature-list" id="features" aria-label="Nexa features">
-                    {features.map(({ title, description }) => (
-                        <li key={title}>
-                            <h2>{title}</h2>
-                            <p>{description}</p>
-                        </li>
-                    ))}
-                </ul>
-            </main>
-
-            <footer className="site-footer">
-                <small>© 2026 Nexa</small>
-                <nav aria-label="Legal">
-                    <a href="/privacy">Privacy Policy</a>
-                    <a href="/terms">Terms of Service</a>
-                </nav>
-            </footer>
-        </div>
-    )
-}
-
-function DashboardPreview() {
-    return (
-        <figure className="flex-1 border-1 border-foreground">
-            <figcaption>Dashboard preview</figcaption>
-            <div className="grid grid-cols-[2fr_1fr] align-end gap-auto">
-                <div className="grid height-auto grid-cols[repeat(7,1fr)] align-items-end gap-auto">
-                    {previewBars.map((height) => (
-                        <span key={height} style={{ height: `${height}%` }} />
+            <div className="flex items-center justify-between gap-2">
+                <div className="grid grid-cols-7 gap-1 h-30 items-end flex-1">
+                    {previewBars.map((height, index) => (
+                        <span
+                            key={index}
+                            style={{ height: `${height}%` }}
+                            className="w-full bg-primary transition-all hover:bg-primary/80"
+                        />
                     ))}
                 </div>
-                <dl className="grid gap-[0.65] px-0.6 py-0.75 border-5 bg-surface">
-                    <div>
-                        <dt>Active</dt>
-                        <dd>128</dd>
+
+                <dl className="flex flex-col gap-2">
+                    <div className="bg-foreground/5 border border-foreground/6 rounded-sm pl-3 pr-20 py-3">
+                        <dt className="text-sm font-light">Active</dt>
+                        <dd className="text-md font-bold text-foreground">128</dd>
                     </div>
-                    <div>
-                        <dt>Done</dt>
-                        <dd>342</dd>
+                    <div className="bg-foreground/5 border border-foreground/6 rounded-sm pl-3 pr-20 py-3">
+                        <dt className="text-sm font-light">Done</dt>
+                        <dd className="text-md font-bold text-foreground">342</dd>
                     </div>
                 </dl>
             </div>
@@ -124,43 +61,44 @@ function NavigationBar() {
 function Dashboard() {
     return (
         <div className="h-screen flex flex-col">
-            <header className="h-fit bg-surface/50 flex items-center justify-between border-b-2 border-slate-800 px-6 py-4">
+            <header className="h-fit flex items-center justify-between border-b-2 border-foreground/20 bg-surface/50 px-8 py-4">
                 <NavigationBar />
             </header>
-            <main className="h- full flex-1 p-6">
-                <div className="flex flex-row">
-                    <section className="flex flex-col flex-1">
-                        <h1 className="text-4xl">
+
+            <main className="flex-1 flex flex-col justify-between p-6">
+                <div className="flex-1 flex flex-row items-center gap-20">
+                    <section className="flex-1 flex flex-col justify-center gap-4">
+                        <h1 className="text-4xl font-bold tracking-tight">
                             Simplified Systems,<br />
                             <span className="text-primary">Superior Results.</span>
                         </h1>
-                        <p>
-                            Tasks, chat, files and analytics for small businesses, in one<br />
+                        <p className="text-page">
+                            Tasks, chat, files and analytics for small businesses, in one
                             real-time workspace your whole team can use at the same time.
                         </p>
-                        <div className="max-w-sm flex gap-2 align-center justify-center">
+                        <div className="max-w-sm flex gap-2 items-center">
                             <Button className="flex-1">Continue with 42</Button>
                             <Button className="flex-1" variant="primary">Get Started</Button>
                         </div>
                     </section>
 
-                    <DashboardPreview />
+                    <DashboardPreview className="flex-1 p-6 bg-surface rounded-xl border border-foreground/20" />
                 </div>
 
 
-                <section>
+                <section className="">
                     <ul className="grid grid-cols-4 gap-2 p-1">
                         {features.map(({ title, description }) => (
                             <li className="before:block before:size-4 before:border-primary before:bg-primary/20 \
-                            before:border before:rounded-full before:content[''] border-1 border-foreground/20 \
-                            rounded-md bg-surface p-4" key={title}>
+                            before:border before:rounded-full before:content[''] border border-foreground/20 bg-surface px-5 py-10 rounded-xl" key={title}>
                                 <h2 className="text-md font-medium ml-3 mt-2">{title}</h2>
-                                <p className="text-sm font-thin ml-3">{description}</p>
+                                <p className="text-page text-sm font-thin ml-3">{description}</p>
                             </li>
                         ))}
                     </ul>
                 </section>
             </main >
+
             <footer className="flex flex-row justify-between h-fit bg-surface/50 py-6 px-20">
                 <small>© 2026 Nexa</small>
                 <nav className="flex gap-2" aria-label="Legal">
