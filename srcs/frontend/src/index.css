@@ -1,6 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Akshar:wght@300..700&display=swap');
 @import "tailwindcss";
 
-:root {
+@theme {
+  --font-sans: "Akshar", ui-sans-serif, system-ui, sans-serif;
+  --color-background: #0d111a;
+  --color-foreground: #e8edf5;
+
+  --color-primary: #fbbf24;
+
+  --color-surface: #1c2131;
+  --color-page: #8591ab;
+  --color-muted: #a2aec3;
+
+  --color-sucess: #38cea0;
+  --color-danger: #ff6b76;
+  --color-info: #608dee;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+.landing {
   color-scheme: dark;
   font-family: "Arial Narrow", "Liberation Sans Narrow", "Segoe UI", sans-serif;
   background: #0f131c;
@@ -12,18 +35,16 @@
   --border: #343c52;
   --muted: #a2aec3;
   --accent: #ffbf24;
-}
-
-a:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-}
-
-.landing {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
 }
+
+.landing a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
 
 .site-header,
 .site-footer {
