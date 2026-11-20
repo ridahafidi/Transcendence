@@ -1,1 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Akshar:wght@300..700&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Akshar", ui-sans-serif, system-ui, sans-serif;
+  --color-background: #0d111a;
+  --color-foreground: #e8edf5;
+
+  --color-primary: #fbbf24;
+
+  --color-surface: #1c2131;
+  --color-page: #8591ab;
+
+  --color-sucess: #38cea0;
+  --color-danger: #ff6b76;
+  --color-info: #608dee;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
