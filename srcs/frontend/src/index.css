@@ -10,14 +10,9 @@
 
   --color-surface: #1c2131;
   --color-page: #8591ab;
+  --color-muted: #a2aec3;
 
   --color-sucess: #38cea0;
   --color-danger: #ff6b76;
   --color-info: #608dee;
-}
-
-@layer base {
-  body {
-    @apply bg-background text-foreground antialiased;
-  }
 }

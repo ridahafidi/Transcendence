@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes } from "react";
 
-type Variant = "normal" | "primary" | "secondary" | "danger" | "info";
+type Variant = "normal" | "primary" | "secondary" | "danger" | "info" | "tab";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: Variant;
@@ -9,7 +9,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const variants: Record<Variant, string> = {
     normal: "bg-surface",
     primary: "bg-primary text-surface",
-    secondary: "border-2 border-foreground"
+    secondary: "border-2 border-foreground",
+    danger: "bg-danger text-background",
+    info: "bg-info text-background",
+    tab: "text-muted aria-selected:bg-surface aria-selected:text-foreground",
 }
 
 function Button({ variant = "normal", type = "button", className = "", ...props }: ButtonProps) {
