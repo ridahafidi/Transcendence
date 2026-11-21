@@ -1,4 +1,5 @@
-import AuthForm from '../pages/AuthForm'
+import LoginForm from '../pages/LoginForm'
+import RegisterForm from '../pages/RegisterForm'
 
 const FEATURES = [
   { title: 'Secure', description: 'Your data, our priority.' },
@@ -32,7 +33,7 @@ function AuthBrandPanel({ isRegister }: { isRegister: boolean }) {
             ))}
           </nav>
 
-          <AuthForm key={currentPage} isRegister={isRegister} />
+          {isRegister ? <RegisterForm /> : <LoginForm />}
 
           {isRegister ? (
             <p className="text-center text-sm text-muted">

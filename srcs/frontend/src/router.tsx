@@ -1,5 +1,5 @@
 import { AuthPage } from '@/features'
-import { DeveloperPage, FeaturesPage, LandingPage, MainContent } from '@/pages'
+import { Dashboard, DeveloperPage, FeaturesPage, LandingPage, MainContent } from '@/pages'
 import { createBrowserRouter, Navigate } from 'react-router'
 
 const router = createBrowserRouter([
@@ -11,6 +11,7 @@ const router = createBrowserRouter([
             { path: '/developer', element: <DeveloperPage /> },
         ],
     },
+    { path: '/dashboard', element: <Dashboard /> },
     { path: '/login', element: <AuthPage /> },
     { path: '/register', element: <AuthPage isRegister /> },
     { path: '/signin', element: <Navigate to="/login" replace /> },
