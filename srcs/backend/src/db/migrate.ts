@@ -1,21 +1,18 @@
 import 'dotenv/config';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { pool } from '../config/database.ts';
 
-const migrationName = '001_initial_schema.sql';
-
-const migrationPath = new URL(
-    `./migrations/${migrationName}`,
-    import.meta.url
-);
+const migrationsDirectory = new URL('./migrations/', import.meta.url);
 
 const client = await pool.connect();
 
 try {
     await client.query('BEGIN');
 
+    // Prevent two migration runners from applying migrations simultaneously.
     await client.query('SELECT pg_advisory_xact_lock(421337)');
 
+    // Create migration history if it doesn't exist.
     await client.query(`
         CREATE TABLE IF NOT EXISTS schema_migrations (
             id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -24,14 +21,36 @@ try {
         )
     `);
 
+    // Discover and sort all SQL migration files.
+    const migrationFiles = (await readdir(migrationsDirectory))
+        .filter((file) => file.endsWith('.sql'))
+        .sort();
+
+    if (migrationFiles.length === 0) {
+        console.log('No migration files found.');
+    }
+
+    // Retrieve migrations that have already been applied.
     const result = await client.query(
-        'SELECT name FROM schema_migrations WHERE name = $1',
-        [migrationName]
+        'SELECT name FROM schema_migrations'
     );
 
-    if (result.rows.length > 0) {
-        console.log(`Migration already applied: ${migrationName}`);
-    } else {
+    const appliedMigrations = new Set(
+        result.rows.map((row) => row.name)
+    );
+
+    // Apply each migration that hasn't been applied yet.
+    for (const migrationName of migrationFiles) {
+        if (appliedMigrations.has(migrationName)) {
+            console.log(`Migration already applied: ${migrationName}`);
+            continue;
+        }
+
+        const migrationPath = new URL(
+            `./migrations/${migrationName}`,
+            import.meta.url
+        );
+
         const sql = await readFile(migrationPath, 'utf8');
 
         await client.query(sql);
@@ -45,6 +64,8 @@ try {
     }
 
     await client.query('COMMIT');
+
+    console.log('Migration process completed.');
 } catch (error) {
     await client.query('ROLLBACK').catch(() => undefined);
 
