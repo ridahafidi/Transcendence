@@ -1,5 +1,3 @@
-import SignInPage from "./SignInPage";
-import { Button } from "@/components";
 interface Feature {
     title: string;
     text: string;
@@ -11,7 +9,7 @@ const features: Feature[] = [
     { title: "Reliable", text: "Always available." },
 ];
 
-function AuthBrandPanel({ className }) {
+function AuthBrandPanel({ className }: { className: string }) {
     return (
         <aside
             className={className}
@@ -30,7 +28,7 @@ function AuthBrandPanel({ className }) {
                     <li key={f.title} className="flex flex-col gap-1">
                         <span className="mb-2 h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
                         <h3 className="text-sm font-semibold">{f.title}</h3>
-                        <p className="text-xs text-muted">{f.text}</p>
+                        <p className="">{f.text}</p>
                     </li>
                 ))}
             </ul>
