@@ -27,7 +27,7 @@ function setAuthCookies(res: Response, accessToken: string, refreshToken: string
         httpOnly: true,
         secure,
         sameSite: 'lax',
-        path: '/api/auth',
+        path: '/api/v1/auth',
         maxAge: Math.max(0, refreshExpiresAt.getTime() - Date.now()), // Set maxAge based on expiresAt
     });
 }
@@ -46,7 +46,7 @@ function clearAuthCookies(res: Response): void {
         httpOnly: true,
         secure,
         sameSite: 'lax',
-        path: '/api/auth',
+        path: '/api/v1/auth',
     });
 }
 
@@ -141,8 +141,11 @@ export async function register(req: Request, res: Response): Promise<void> {
 
     if (!validation.valid) {
         res.status(400).json({
-            message: 'Invalid registration data.',
-            errors: validation.errors
+            error: {
+                code: 'VALIDATION_ERROR',
+                message: 'Please correct the highlighted fields.',
+                errors: validation.errors
+            }
         });
         return;
     }
@@ -190,8 +193,11 @@ export async function login(req: Request, res: Response): Promise<void> {
 
     if (!validation.valid) {
         res.status(400).json({
-            message: 'Invalid login data.',
-            errors: validation.errors
+            error: {
+                code: 'VALIDATION_ERROR',
+                message: 'Please correct the highlighted fields.',
+                errors: validation.errors
+            }
         });
         return;
     }
