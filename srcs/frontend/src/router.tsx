@@ -1,3 +1,4 @@
+import WorkspacesPage from './pages/WorkspacesPage'
 import { AuthPage } from '@/features'
 import { Dashboard, DeveloperPage, FeaturesPage, LandingPage, MainContent } from '@/pages'
 import { createBrowserRouter, Navigate } from 'react-router'
@@ -11,6 +12,7 @@ const router = createBrowserRouter([
             { path: '/developer', element: <DeveloperPage /> },
         ],
     },
+    { path: '/workspaces', element: <WorkspacesPage /> },
     { path: '/dashboard', element: <Dashboard /> },
     { path: '/login', element: <AuthPage /> },
     { path: '/register', element: <AuthPage isRegister /> },
