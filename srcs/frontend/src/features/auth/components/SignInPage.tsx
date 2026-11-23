@@ -1,16 +1,13 @@
 import { Button, Input } from "@/components";
 
-
-const PATTERN_MATCH = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-
 function SignInPage() {
     return (
         <>
             <h1 className="leading-6 text-3xl font-extrabold">Welcome <span className="text-primary">back</span></h1>
             <p className="leading-6 text-page">Sign in to your account</p>
-            <form className="my-4 flex flex-col gap-3">
-                <Input type="email" name="login" placeholder="Login or email" autoComplete="username" required />
-                <Input type="password" name="password" placeholder="Password" autoComplete="current-password" pattern={PATTERN_MATCH} required />
+            <form noValidate className="my-4 flex flex-col gap-3">
+                <Input type="email" name="login" placeholder="Login or email" autoComplete="username" error="email not valid" />
+                <Input type="password" name="password" placeholder="Password" autoComplete="current-password" />
                 <Button type="submit" variant="primary">Sign in</Button>
                 <div className="flex items-center justify-between">
                     <label className="flex gap-2 cursor-pointer items-center whitespace-nowrap">
