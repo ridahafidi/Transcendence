@@ -1,3 +1,5 @@
+import { loginSchema } from '../schemas/login.schema.ts';
+
 export interface LoginValidationError {
     field: 'email' | 'password' | 'rememberMe' | 'body';
     message: string;
@@ -9,31 +11,37 @@ export interface LoginValidationResult {
 }
 
 export function validateLoginInput(input: unknown): LoginValidationResult {
-    const errors: LoginValidationError[] = [];
+    const result = loginSchema.safeParse(input);
 
-    if (typeof input !== 'object' || input === null || Array.isArray(input)) {
+    if (!result.success) {
+        const errors: LoginValidationError[] = result.error.issues.map((issue) => {
+            const field = issue.path[0];
+
+            if (
+                field === 'email' ||
+                field === 'password' ||
+                field === 'rememberMe'
+            ) {
+                return {
+                    field,
+                    message: issue.message,
+                };
+            }
+
+            return {
+                field: 'body',
+                message: 'Request body must be an object.',
+            };
+        });
+
         return {
             valid: false,
-            errors: [{ field: 'body', message: 'Request body must be an object.' }],
+            errors,
         };
     }
 
-    const data = input as Record<string, unknown>;
-
-    if (typeof data.email !== 'string' || data.email.trim().length === 0) {
-        errors.push({ field: 'email', message: 'Email is required.' });
-    }
-
-    if (typeof data.password !== 'string' || data.password.length === 0) {
-        errors.push({ field: 'password', message: 'Password is required.' });
-    }
-
-    if (data.rememberMe !== undefined && typeof data.rememberMe !== 'boolean') {
-        errors.push({ field: 'rememberMe', message: 'Remember me must be a boolean.' });
-    }
-
     return {
-        valid: errors.length === 0,
-        errors,
+        valid: true,
+        errors: [],
     };
 }
