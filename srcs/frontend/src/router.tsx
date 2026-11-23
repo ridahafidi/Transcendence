@@ -17,6 +17,7 @@ const router = createBrowserRouter([
         ],
     },
     { path: '/workspaces', element: <WorkspacesPage /> },
+    { path: '/workspaces/:workspaceId', element: <WorkspacesPage /> },
     { path: '/dashboard', element: <Dashboard /> },
     { path: '/login', element: <AuthPage /> },
     { path: '/register', element: <AuthPage isRegister /> },
