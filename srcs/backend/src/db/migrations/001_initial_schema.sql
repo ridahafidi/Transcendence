@@ -7,7 +7,7 @@ CREATE TABLE users (
     avatar_file_id BIGINT,
     bio VARCHAR(250),
     global_role VARCHAR(50) NOT NULL DEFAULT 'GUEST'
-        CHECK (global_role IN ('ADMIN', 'MODERATOR', 'USER', 'GUEST')),
+        CHECK (global_role IN ('ADMIN', 'USER')),
     status VARCHAR(50) NOT NULL DEFAULT 'OFFLINE'
         CHECK (status IN ('ONLINE', 'OFFLINE', 'AWAY')),
     last_seen_at TIMESTAMPTZ,
@@ -38,7 +38,7 @@ CREATE TABLE workspace_members (
     workspace_id BIGINT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     role VARCHAR(50) NOT NULL DEFAULT 'MEMBER'
-        CHECK (role IN ('OWNER', 'MANAGER', 'MEMBER', 'VIEWER')),
+        CHECK (role IN ('OWNER', 'MEMBER')),
     joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (workspace_id, user_id)
 );

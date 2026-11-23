@@ -1,6 +1,6 @@
 import { sessionMiddleware } from './config/session.ts';
-import authRoutes from './modules/auth/auth.routes.ts';
-
+import authRoutes from './modules/auth/routes/auth.routes.ts';
+import cookieParser from 'cookie-parser';
 import express, {
     type Express,
     type Request,
@@ -9,12 +9,14 @@ import express, {
 
 import { pool } from './config/database.ts';
 
+import { authenticate } from './modules/auth/middlewares/authenticate.ts';
+
 const app: Express = express();
 
 app.use(sessionMiddleware);
 app.use(express.json());
-
-app.use('/api/auth', authRoutes);
+app.use(cookieParser());
+app.use('/api/v1/auth', authRoutes);
 
 app.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({
@@ -38,6 +40,13 @@ app.get('/health/db', async (_req: Request, res: Response) => {
             database: 'unavailable'
         });
     }
+});
+
+app.get('/api/v1/test/protected', authenticate, (req, res) => {
+    res.json({
+        message: 'You are authenticated',
+        userId: req.user?.id
+    });
 });
 
 const PORT = Number(process.env.PORT ?? 3000);
