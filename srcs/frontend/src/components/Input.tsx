@@ -1,13 +1,12 @@
 import type { InputHTMLAttributes } from "react";
 
 interface InputProp extends InputHTMLAttributes<HTMLInputElement> {
-    error?: string
+    errors?: string[]
 }
 
-function Input({ className = "", error = "", ...props }: InputProp) {
-    const hasError = Boolean(error)
+function Input({ className = "", errors = [], ...props }: InputProp) {
+    const hasError = errors.length > 0;
 
-    console.log(hasError, error)
     return (
         <div className="relative">
             <input
@@ -21,7 +20,11 @@ function Input({ className = "", error = "", ...props }: InputProp) {
                 ].join(' ')}
                 {...props}
             />
-            {hasError && <p className="text-danger">error</p>}
+            {hasError &&
+                <ol className="list-disc px-10 mt-2">
+                    {errors.map((error, id) => (<li key={id} className="text-danger">{error}</li>))}
+                </ol>
+            }
         </div>
     )
 }

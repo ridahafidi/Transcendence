@@ -15,11 +15,14 @@ function Button({ variant, type = "button", className = "", ...props }: ButtonPr
     return (
         <button
             type={type}
-            className={`
-                cursor-pointer rounded-md px-2.5 py-1.5 transition-colors whitespace-nowrap text-center uppercase
-                ${variant ? variants[variant] : ""}
-                ${className}`}
-            {...props} />
+            className={
+                [
+                    "cursor-pointer rounded-md px-2.5 py-1.5 transition-colors whitespace-nowrap text-center uppercase",
+                    variant && variants[variant],
+                    className,
+                ].join(' ')}
+            {...props}
+        />
     )
 }
 
