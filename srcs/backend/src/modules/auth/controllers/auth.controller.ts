@@ -272,6 +272,18 @@ export function handle42Callback(req: Request, res: Response): void {
                 return resolve42User(userProfile);
             })
             .then(async (user) => {
+                await new Promise<void>((resolve, reject) => {
+                    req.session.regenerate((error) => {
+                        if (error) 
+                        {
+                            reject(error);
+                            return;
+                        }
+
+                    resolve();
+                    });
+                });
+
                 const refreshSession = await createRefreshSession({
                     userId: user.id,
                     rememberMe: false
