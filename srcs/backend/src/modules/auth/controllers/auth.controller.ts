@@ -175,16 +175,39 @@ export async function register(req: Request, res: Response): Promise<void> {
         });
     }
     catch (error) {
-        if (error instanceof Error && error.message === 'USERNAME_OR_EMAIL_ALREADY_EXISTS') {
-            res.status(409).json({
-                message: 'Username or email already exists.'
-            });
-        } else {
-            console.error('Registration error:', error);
-            res.status(500).json({
-                message: 'Internal server error.'
-            });
+        if (error instanceof Error) {
+            if (error.message === 'USERNAME_OR_EMAIL_ALREADY_EXISTS') {
+                res.status(409).json({
+                    message: 'Username or email already exists.'
+                });
+                return;
+            }
+
+            if (error.message === 'PASSWORD_COMPROMISED') {
+                res.status(400).json({
+                    error: {
+                        code: 'PASSWORD_COMPROMISED',
+                        message: 'This password has appeared in known data breaches. Please choose a different password.'
+                    }
+                });
+                return;
+            }
+
+            if (error.message === 'PASSWORD_BREACH_CHECK_UNAVAILABLE') {
+                res.status(503).json({
+                    error: {
+                        code: 'PASSWORD_BREACH_CHECK_UNAVAILABLE',
+                        message: 'Password security verification is temporarily unavailable. Please try again later.'
+                    }
+                });
+                return;
+            }
         }
+
+        console.error('Registration error:', error);
+        res.status(500).json({
+            message: 'Internal server error.'
+        });
     }
 }
 

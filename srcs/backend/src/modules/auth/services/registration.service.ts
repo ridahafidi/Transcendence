@@ -1,5 +1,6 @@
 import {createUser, findUserByUsernameOrEmail} from '../repositories/user.repository.ts';
 import {hashPassword} from './password.service.ts';
+import {isPasswordCompromised} from './password-policy.service.ts';
 
 export interface RegisterInput {
     username: string;
@@ -24,6 +25,11 @@ export async function registerUser(input: RegisterInput) {
 
     if (existingUser) {
         throw new Error('USERNAME_OR_EMAIL_ALREADY_EXISTS');
+    }
+
+    const passwordCompromised = await isPasswordCompromised(input.password);
+    if (passwordCompromised) {
+        throw new Error('PASSWORD_COMPROMISED');
     }
 
     const passwordHash = await hashPassword(input.password);
