@@ -6,10 +6,10 @@ CREATE TABLE users (
     display_name VARCHAR(100),
     avatar_file_id BIGINT,
     bio VARCHAR(250),
-    global_role VARCHAR(50) NOT NULL DEFAULT 'GUEST'
-        CHECK (global_role IN ('ADMIN', 'MODERATOR', 'USER', 'GUEST')),
+    global_role VARCHAR(50) NOT NULL DEFAULT 'USER'
+        CHECK (global_role IN ('ADMIN', 'USER')),
     status VARCHAR(50) NOT NULL DEFAULT 'OFFLINE'
-        CHECK (status IN ('ONLINE', 'OFFLINE', 'AWAY')),
+        CHECK (status IN ('ONLINE', 'OFFLINE')),
     last_seen_at TIMESTAMPTZ,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -38,7 +38,7 @@ CREATE TABLE workspace_members (
     workspace_id BIGINT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     role VARCHAR(50) NOT NULL DEFAULT 'MEMBER'
-        CHECK (role IN ('OWNER', 'MANAGER', 'MEMBER', 'VIEWER')),
+        CHECK (role IN ('OWNER', 'MANAGER', 'MEMBER')),
     joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (workspace_id, user_id)
 );
@@ -57,14 +57,6 @@ CREATE TABLE tasks (
     due_date TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE task_comments (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    task_id BIGINT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
-    author_id BIGINT NOT NULL REFERENCES users(id),
-    content TEXT NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE conversations (
@@ -161,9 +153,6 @@ CREATE INDEX idx_tasks_workspace_status
 
 CREATE INDEX idx_tasks_assignee_id
     ON tasks(assignee_id);
-
-CREATE INDEX idx_task_comments_task_id
-    ON task_comments(task_id);
 
 CREATE INDEX idx_conversations_workspace_id
     ON conversations(workspace_id);
