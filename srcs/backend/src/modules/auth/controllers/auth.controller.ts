@@ -227,13 +227,13 @@ export async function login(req: Request, res: Response): Promise<void> {
 
     try {
         const user = await loginUser({
-            login: req.body.login,
+            email: req.body.email,
             password: req.body.password
         });
         
         if (!user) {
             res.status(401).json({
-                message: 'Invalid username/email or password.'
+                message: 'Invalid email or password.'
             });
             return;
         }

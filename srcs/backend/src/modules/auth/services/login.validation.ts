@@ -1,5 +1,5 @@
 export interface LoginValidationError {
-    field: 'login' | 'password' | 'rememberMe' | 'body';
+    field: 'email' | 'password' | 'rememberMe' | 'body';
     message: string;
 }
 
@@ -20,8 +20,8 @@ export function validateLoginInput(input: unknown): LoginValidationResult {
 
     const data = input as Record<string, unknown>;
 
-    if (typeof data.login !== 'string' || data.login.trim().length === 0) {
-        errors.push({ field: 'login', message: 'Username or email is required.' });
+    if (typeof data.email !== 'string' || data.email.trim().length === 0) {
+        errors.push({ field: 'email', message: 'Email is required.' });
     }
 
     if (typeof data.password !== 'string' || data.password.length === 0) {

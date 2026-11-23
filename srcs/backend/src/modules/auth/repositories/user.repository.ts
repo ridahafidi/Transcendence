@@ -67,7 +67,7 @@ export async function findUserByLogin(identifier: string): Promise<LoginUser | n
             created_at,
             is_active
          FROM users
-         WHERE username = $1 OR email = $1
+         WHERE email = $1
          LIMIT 1`,
         [identifier]
     );

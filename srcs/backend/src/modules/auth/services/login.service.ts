@@ -2,14 +2,14 @@ import { findUserByLogin } from '../repositories/user.repository.ts';
 import { verifyPassword } from './password.service.ts';
 
 export interface LoginInput {
-    login: string;
+    email: string;
     password: string;
 }
 
 export async function loginUser(input: LoginInput) {
-    const identifier = input.login.trim();
+    const email = input.email.trim().toLowerCase();
 
-    const user = await findUserByLogin(identifier);
+    const user = await findUserByLogin(email);
 
     if (!user || !user.password_hash || !user.is_active) {
         return null;
