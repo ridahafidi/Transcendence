@@ -1,25 +1,42 @@
+import * as z from 'zod'
+import { FormEvent, useState } from 'react'
 import { Button, Input } from "@/components";
-import { signInSchema, type signInInput } from '@/schema'
-import { useState } from "react";
+import { type signUpInput, signUpSchema } from "@/schema";
 
-type Errors = Partial<Record<keyof signInInput, string[]>>
+type Error = Partial<Record<keyof signUpInput, string[]>>
 
-export default function SignUpPage() {
-    const [erros, setErrors] = useState<Errors>({});
+function SignUpPage() {
+    const [errors, setErrors] = useState<Error>({})
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const result = signUpSchema.safeParse(Object.fromEntries(new FormData(e.currentTarget)))
+        if (!result.success) {
+            setErrors(z.flattenError(result.error).fieldErrors)
+            console.log(errors)
+            return
+        }
+        setErrors({})
+    }
 
     return (
         <>
-            <h1 className="leading-6 text-3xl font-extrabold">Welcome <span className="text-primary">back</span></h1>
-            <p className="leading-6 text-page">Sign in to your account</p>
-            <form noValidate className="my-4 flex flex-col gap-3">
-                <Input type="email" name="login" placeholder="Login or email" autoComplete="username" />
-                <Input type="password" name="password" placeholder="Password" autoComplete="current-password" />
+            <h1 className="leading-6 text-3xl font-extrabold">Create <span className="text-primary">account</span></h1>
+            <p className="leading-6 text-page">create new account today</p>
+            <form noValidate className="my-4 flex flex-col gap-3" onSubmit={handleSubmit} >
+                <Input type="email" name="email" placeholder="Login or email" autoComplete="username" errors={errors.email} />
+                <Input type="text" name="username" placeholder="Username" autoComplete="username" errors={errors.username} />
+                <Input type="password" name="password" placeholder="Password" autoComplete="current-password" errors={errors.password} />
+                <Input type="password" name="confirm" placeholder="Confirm" errors={errors.confirm} />
                 <Button type="submit" variant="primary">Sign in</Button>
                 <div className="flex items-center justify-between">
                     <label className="flex gap-2 cursor-pointer items-center whitespace-nowrap">
-                        <Input type="checkbox" className="h-4 w-4 accent-primary" />keep me signed in
+                        <Input type="checkbox" className="h-4 w-4 accent-primary" />I agree to the
+                        <a href="#" className="text-primary hover:underline">Terms of Service</a>
+                        and
+                        <a href="#" className="text-primary hover:underline">Privacy Policy</a>
                     </label>
-                    <a href="#" className="text-primary hover:underline">Forget your password?</a>
                 </div>
             </form>
             <p className="text-center text-page">or continue with</p>
@@ -30,5 +47,8 @@ export default function SignUpPage() {
                 {" and "}
                 <a href="#" className="hover:text-foreground underline">Terms of Service</a>
             </p>
-        </>)
+        </>
+    )
 }
+
+export default SignUpPage;
