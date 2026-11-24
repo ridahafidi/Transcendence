@@ -11,7 +11,9 @@ CREATE TABLE users (
     last_seen_at TIMESTAMPTZ,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    badge_color VARCHAR (7) NOT NULL
+        CHECK (badge_color ~ '^#[0-9A-Fa-f]{6}$')
 );
 
 CREATE TABLE oauth_accounts (

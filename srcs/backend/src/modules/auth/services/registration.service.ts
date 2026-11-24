@@ -20,7 +20,7 @@ function isUniqueViolation(error: unknown): boolean {
 export async function registerUser(input: RegisterInput) {
     const username = input.username.trim();
     const email = input.email.trim().toLowerCase();
-
+    const badgeColor = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
     const existingUser = await findUserByUsernameOrEmail(username, email);
 
     if (existingUser) {
@@ -38,7 +38,8 @@ export async function registerUser(input: RegisterInput) {
         return await createUser({
             username,
             email,
-            passwordHash
+            passwordHash,
+            badgeColor
         });
     }
     catch (error) {
