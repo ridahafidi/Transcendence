@@ -1,8 +1,6 @@
-NAME=spaceio
+all: up
 
-all: $(NAME)
-
-$(NAME):
+up:
 	docker compose up -d --build
 
 clean:
@@ -13,4 +11,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: re fclean clean all
+.PHONY: up re fclean clean all

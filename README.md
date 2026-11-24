@@ -14,7 +14,7 @@ NEXA is a comprehensive collaborative workspace and task management platform. Ou
 **Execution:**
 1. Clone the repository.
 2. Copy the example environment file: `cp env.example .env` and fill in your 42 API credentials.
-3. Build and run the infrastructure: `make up` (or `docker-compose up --build -d`).
+3. Build and run the infrastructure: `make / make up` (or `docker-compose up --build -d`).
 4. Access the application at `https://localhost` (Note: Accept the self-signed certificate warning for local development).
 
 ## Team Information
