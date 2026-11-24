@@ -1,32 +1,36 @@
 name: my-web-app
+
 on:
   pull_request:
+
 jobs:
   run_containers:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      
-      - name: generate .env file
-      - env:
-          POSTGRES_PASSWORD = ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB = ${{ secrets.POSTGRES_DB }}
-          SESSION_SECRET = ${{ secrets.SESSION_SECRET }}
-          FORTYTWO_CLIENT_ID = ${{ secrets.FORTYTWO_CLIENT_ID }}
-          FORTYTWO_CLIENT_SECRET = ${{ secrets.FORTYTWO_CLIENT_SECRET }}
-      - run: |
-          : "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is not set}"
-          : "${JWT_SECRET:?JWT_SECRET is not set}"
-          : "${SESSION_SECRET:?SESSION_SECRET is not set}"
-          : "${FORTYTWO_CLIENT_ID:?FORTYTWO_CLIENT_ID is not set}"
-          : "${FORTYTWO_CLIENT_SECRET:?FORTYTWO_CLIENT_SECRET is not set}"
-    
-          cp .env.example .env
-          sed -i 's/enter_password_here/$POSTGRES_PASSWORD' .env
-          sed -i 's/enter_database_name_here/$POSTGRES_DB' .env
-          sed -i 's/enter_session_secret_here/$SESSION_SECRET' .env
-          sed -i 's/generated_client_id/$FORTYTWO_CLIENT_ID' .env
-          sed -i 's/generated_client_secret/$FORTYTWO_CLIENT_SECRET' .env
 
-      - name: set-up containers
+      - name: Generate .env file
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          FORTYTWO_CLIENT_ID: ${{ secrets.FORTYTWO_CLIENT_ID }}
+          FORTYTWO_CLIENT_SECRET: ${{ secrets.FORTYTWO_CLIENT_SECRET }}
+        run: |
+          for var in POSTGRES_PASSWORD POSTGRES_DB SESSION_SECRET FORTYTWO_CLIENT_ID FORTYTWO_CLIENT_SECRET; do
+            eval "val=\${$var-}"
+            if [ -z "$val" ]; then
+              echo "Error: $var is not set or empty" >&2
+              exit 1
+            fi
+          done
+
+          cp .env.example .env
+          sed -i "s|enter_password_here|$POSTGRES_PASSWORD|g" .env
+          sed -i "s|enter_database_name_here|$POSTGRES_DB|g" .env
+          sed -i "s|enter_session_secret_here|$SESSION_SECRET|g" .env
+          sed -i "s|generated_client_id|$FORTYTWO_CLIENT_ID|g" .env
+          sed -i "s|generated_client_secret|$FORTYTWO_CLIENT_SECRET|g" .env
+
+      - name: Set up containers
         run: make
