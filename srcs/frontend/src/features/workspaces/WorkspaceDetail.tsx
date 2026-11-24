@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react'
+import AddTaskDialog from './AddTaskDialog'
+import type { TaskPriority } from './AddTaskDialog'
 import { initialMembers, initialWorkspaceTabs, MEMBER_NAMES } from './workspace-preview-data'
 import { WorkspaceActivity } from './WorkspaceActivity'
 import { WorkspaceChat } from './WorkspaceChat'
@@ -10,10 +12,11 @@ const VIEWS = ['Tasks', 'Chat', 'Files', 'Members', 'Activity'] as const
 const STATUS_COLUMNS = ['To do', 'In progress', 'Done'] as const
 
 type Task = {
+  id: number
   title: string
   description: string
   status: typeof STATUS_COLUMNS[number]
-  priority: 'High' | 'Medium' | 'Low'
+  priority: TaskPriority
   assignee: string
 }
 
@@ -30,7 +33,7 @@ const PRIORITY_COLORS = {
   Low: 'text-emerald-400',
 }
 
-const SAMPLE_TASKS: Record<number, Task[]> = {
+const SAMPLE_TASKS: Record<number, Omit<Task, 'id'>[]> = {
   6: [
     { title: 'Order supplies', description: 'Check the stock list and order the supplies needed for this week’s kitchen prep.', status: 'To do', priority: 'High', assignee: 'SM' },
     { title: 'Clean freezer', description: 'Empty and sanitize the freezer, then put labeled items back in their assigned sections.', status: 'To do', priority: 'Low', assignee: 'YK' },
@@ -72,29 +75,37 @@ export default function WorkspaceDetail({ workspace, search }: { workspace: Work
   function addActivity(text: string, detail: string) {
     setTabs((current) => ({ ...current, activity: [{ day: 'Today', text, detail }, ...current.activity] }))
   }
-  const [tasks, setTasks] = useState(() => SAMPLE_TASKS[workspace.id] ?? [])
-  const [selectedTitle, setSelectedTitle] = useState<string>()
+  const [tasks, setTasks] = useState(() => (SAMPLE_TASKS[workspace.id] ?? []).map((task, id) => ({ ...task, id })))
+  const [selectedId, setSelectedId] = useState<number>()
   const taskDialog = useRef<HTMLDialogElement>(null)
-  const selectedTask = tasks.find(({ title }) => title === selectedTitle)
+  const selectedTask = tasks.find(({ id }) => id === selectedId)
   const previousStatus = selectedTask?.status === 'Done' ? 'In progress' : 'To do'
   const nextStatus = selectedTask?.status === 'To do' ? 'In progress' : 'Done'
 
-  function openTask(title: string) {
-    setSelectedTitle(title)
+  function openTask(id: number) {
+    setSelectedId(id)
     taskDialog.current?.showModal()
+  }
+
+  function addTask(draft: Pick<Task, 'title' | 'description' | 'priority'>) {
+    setTasks((current) => [
+      ...current,
+      { ...draft, id: current.length, status: 'To do', assignee: '' },
+    ])
+    addActivity(`You created ${draft.title}`, 'Task added')
   }
 
   function moveTask(status: Task['status']) {
     if (!selectedTask || selectedTask.status === status) return
     setTasks((current) => current.map((task) =>
-      task.title === selectedTask.title ? { ...task, status } : task,
+      task.id === selectedTask.id ? { ...task, status } : task,
     ))
     addActivity(`You moved ${selectedTask.title} to ${status}`, 'Task status changed')
   }
 
   const query = search.trim().toLowerCase()
   const visibleTasks = tasks.filter(({ title, assignee }) =>
-    `${title} ${MEMBER_NAMES[assignee]}`.toLowerCase().includes(query),
+    `${title} ${MEMBER_NAMES[assignee] ?? ''}`.toLowerCase().includes(query),
   )
 
   return (
@@ -106,6 +117,7 @@ export default function WorkspaceDetail({ workspace, search }: { workspace: Work
           <p className="mt-1 text-sm text-muted">{members.length} {members.length === 1 ? 'member' : 'members'} · Sample data</p>
           {workspace.description && <p className="mt-1 text-sm break-words text-muted">{workspace.description}</p>}
         </div>
+        {view === 'Tasks' && <AddTaskDialog onAdd={addTask} />}
         {view === 'Chat' && <button type="button" className="rounded-md bg-primary px-4 py-2 text-sm text-background" onClick={() => setView('Members')}>View members</button>}
         {view === 'Activity' && <button type="button" className="rounded-md bg-primary px-4 py-2 text-sm text-background" onClick={() => setView('Tasks')}>View tasks</button>}
       </header>
@@ -129,13 +141,13 @@ export default function WorkspaceDetail({ workspace, search }: { workspace: Work
                   <span className="rounded-full bg-foreground/5 px-2 py-0.5 text-xs text-muted">{columnTasks.length}</span>
                 </h2>
                 <ul className="grid gap-2" role="list">
-                  {columnTasks.map(({ title, priority, assignee }) => (
-                    <li key={title}>
-                      <button type="button" onClick={() => openTask(title)} className="w-full cursor-pointer rounded-md border border-foreground/10 bg-foreground/5 p-3 text-left hover:border-primary/60 focus-visible:outline-2 focus-visible:outline-primary">
-                        <span className="block text-sm">{title}</span>
+                  {columnTasks.map(({ id, title, priority, assignee }) => (
+                    <li key={id}>
+                      <button type="button" onClick={() => openTask(id)} className="w-full cursor-pointer rounded-md border border-foreground/10 bg-foreground/5 p-3 text-left hover:border-primary/60 focus-visible:outline-2 focus-visible:outline-primary">
+                        <span className="block text-sm wrap-anywhere">{title}</span>
                         <span className="mt-2 flex flex-wrap justify-between gap-2 text-xs">
                           <span className={PRIORITY_COLORS[priority]}>{priority}</span>
-                          <span className="text-muted">{MEMBER_NAMES[assignee]}</span>
+                          <span className="text-muted">{MEMBER_NAMES[assignee] ?? 'Unassigned'}</span>
                         </span>
                       </button>
                     </li>
@@ -170,14 +182,14 @@ export default function WorkspaceDetail({ workspace, search }: { workspace: Work
         {selectedTask && (
           <>
             <header className="mb-4 flex items-start justify-between gap-4">
-              <h2 id="task-title" className="text-xl font-semibold">{selectedTask.title}</h2>
+              <h2 id="task-title" className="min-w-0 text-xl font-semibold wrap-anywhere">{selectedTask.title}</h2>
               <form method="dialog">
                 <button className="cursor-pointer rounded-md px-2 py-1 text-sm text-muted hover:bg-foreground/10">Close</button>
               </form>
             </header>
-            <p className="text-sm">{selectedTask.description}</p>
+            <p className="text-sm wrap-anywhere whitespace-pre-wrap">{selectedTask.description || 'No description.'}</p>
             <dl className="mt-4 grid gap-2 text-sm">
-              <div className="flex gap-2"><dt className="text-muted">Assignee</dt><dd>{MEMBER_NAMES[selectedTask.assignee]}</dd></div>
+              <div className="flex gap-2"><dt className="text-muted">Assignee</dt><dd>{MEMBER_NAMES[selectedTask.assignee] ?? 'Unassigned'}</dd></div>
               <div className="flex gap-2"><dt className="text-muted">Priority</dt><dd className={PRIORITY_COLORS[selectedTask.priority]}>{selectedTask.priority}</dd></div>
               <div className="flex gap-2"><dt className="text-muted">Status</dt><dd role="status">{selectedTask.status}</dd></div>
             </dl>
