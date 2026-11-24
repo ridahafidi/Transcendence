@@ -1,26 +1,13 @@
 import type { Request, Response } from 'express';
 import { signAccessToken } from '@/modules/auth/services/jwt.service';
 import { createRefreshSession } from '@/modules/auth/services/refresh-token.service';
-import { registerUser, type RegisterInput } from '@/modules/auth/services/registration.service';
-import { validateRegistrationInput } from '@/modules/auth/services/registration.validation';
+import { registerUser } from '@/modules/auth/services/registration.service';
 import { setAuthCookies } from '@/modules/auth/utils/auth-cookies';
+import type { RegisterInput } from '../schemas/register.schema';
 
-export async function register(req: Request, res: Response): Promise<void> {
-    const validation = validateRegistrationInput(req.body);
-
-    if (!validation.valid) {
-        res.status(400).json({
-            error: {
-                code: 'VALIDATION_ERROR',
-                message: 'Please correct the highlighted fields.',
-                errors: validation.errors
-            }
-        });
-        return;
-    }
-
+export async function register(req: Request<{}, any, RegisterInput>, res: Response): Promise<void> {
     try {
-        const user = await registerUser(req.body as RegisterInput);
+        const user = await registerUser(req.body);
 
         const refreshSession = await createRefreshSession({
             userId: user.id,

@@ -4,21 +4,9 @@ import { createRefreshSession, rotateRefreshSession } from '@/modules/auth/servi
 import { validateLoginInput } from '@/modules/auth/services/login.validation';
 import { loginUser } from '@/modules/auth/services/login.service';
 import { setAuthCookies } from '@/modules/auth/utils/auth-cookies';
+import type { LoginInput } from '../schemas/login.schema';
 
-export async function login(req: Request, res: Response): Promise<void> {
-    const validation = validateLoginInput(req.body);
-
-    if (!validation.valid) {
-        res.status(400).json({
-            error: {
-                code: 'VALIDATION_ERROR',
-                message: 'Please correct the highlighted fields.',
-                errors: validation.errors
-            }
-        });
-        return;
-    }
-
+export async function login(req: Request<{}, any, LoginInput>, res: Response): Promise<void> {
     try {
         const user = await loginUser({
             email: req.body.email,
