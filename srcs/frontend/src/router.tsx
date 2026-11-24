@@ -1,3 +1,7 @@
+import FriendsPage from './pages/FriendsPage'
+import MessagesPage from './pages/MessagesPage'
+import ProfilePage from './pages/ProfilePage'
+import SettingsPage from './pages/SettingsPage'
 import FortyTwoCallbackPage from './features/auth/pages/FortyTwoCallbackPage'
 import ErrorPage from './pages/ErrorPage'
 import PrivacyPolicy from './pages/PrivacyPolicy'
@@ -16,6 +20,11 @@ const router = createBrowserRouter([
             { path: '/developer', element: <DeveloperPage /> },
         ],
     },
+    { path: '/friends', element: <FriendsPage /> },
+    { path: '/messages', element: <MessagesPage /> },
+    { path: '/profile', element: <ProfilePage /> },
+    { path: '/users/:username', element: <ProfilePage /> },
+    { path: '/settings', element: <SettingsPage /> },
     { path: '/workspaces', element: <WorkspacesPage /> },
     { path: '/workspaces/:workspaceId', element: <WorkspacesPage /> },
     { path: '/dashboard', element: <Dashboard /> },
