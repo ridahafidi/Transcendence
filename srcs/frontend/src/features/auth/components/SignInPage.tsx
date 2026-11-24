@@ -1,9 +1,9 @@
 import * as z from 'zod'
 import { FormEvent, useState } from 'react'
 import { Button, Input } from "@/components";
-import { type signInInput, signInSchema } from "@/schema";
+import { type LoginInput, loginSchema } from "@/schemas";
 
-type Error = Partial<Record<keyof signInInput, string[]>>
+type Error = Partial<Record<keyof LoginInput, string[]>>
 
 function SignInPage() {
     const [errors, setErrors] = useState<Error>({})
@@ -11,7 +11,7 @@ function SignInPage() {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const result = signInSchema.safeParse(Object.fromEntries(new FormData(e.currentTarget)))
+        const result = loginSchema.safeParse(Object.fromEntries(new FormData(e.currentTarget)))
         if (!result.success) {
             setErrors(z.flattenError(result.error).fieldErrors)
             return

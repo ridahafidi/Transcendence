@@ -17,7 +17,7 @@ function AuthBrandPanel({ className }: { className: string }) {
                 backgroundImage:
                     "repeating-linear-gradient(90deg, transparent 0 5%, rgba(255,255,255,0.07) 5% 10%), linear-gradient(90deg, #1e2f50, #090e19)",
             }}>
-            <span className="absolute left-12 top-10 text-sm font-bold">// spaceio</span>
+            <span className="absolute left-12 top-10 text-3xl font-bold">&#47;&#47; NEXA</span>
             <h2 className="text-5xl font-bold leading-tight">
                 Simplified Systems,
                 <br />
