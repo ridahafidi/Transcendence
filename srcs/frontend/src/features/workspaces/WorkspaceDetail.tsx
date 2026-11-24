@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { initialMembers, initialWorkspaceTabs, MEMBER_NAMES } from './workspace-preview-data'
-import { WorkspaceActivity, WorkspaceChat, WorkspaceFiles, WorkspaceMembers } from './WorkspaceTabs'
+import { WorkspaceActivity } from './WorkspaceActivity'
+import { WorkspaceChat } from './WorkspaceChat'
+import { WorkspaceFiles } from './WorkspaceFiles'
+import { WorkspaceMembers } from './WorkspaceMembers'
 
 const VIEWS = ['Tasks', 'Chat', 'Files', 'Members', 'Activity'] as const
 
@@ -8,6 +11,7 @@ const STATUS_COLUMNS = ['To do', 'In progress', 'Done'] as const
 
 type Task = {
   title: string
+  description: string
   status: typeof STATUS_COLUMNS[number]
   priority: 'High' | 'Medium' | 'Low'
   assignee: string
@@ -28,34 +32,34 @@ const PRIORITY_COLORS = {
 
 const SAMPLE_TASKS: Record<number, Task[]> = {
   6: [
-    { title: 'Order supplies', status: 'To do', priority: 'High', assignee: 'SM' },
-    { title: 'Clean freezer', status: 'To do', priority: 'Low', assignee: 'YK' },
-    { title: 'Update menu prices', status: 'To do', priority: 'Medium', assignee: 'AL' },
-    { title: 'Prep weekly menu', status: 'In progress', priority: 'High', assignee: 'SM' },
-    { title: 'Inventory check', status: 'In progress', priority: 'Medium', assignee: 'YK' },
-    { title: 'Train new cook', status: 'Done', priority: 'Medium', assignee: 'AL' },
-    { title: 'Fix oven timer', status: 'Done', priority: 'Low', assignee: 'SM' },
+    { title: 'Order supplies', description: 'Check the stock list and order the supplies needed for this week’s kitchen prep.', status: 'To do', priority: 'High', assignee: 'SM' },
+    { title: 'Clean freezer', description: 'Empty and sanitize the freezer, then put labeled items back in their assigned sections.', status: 'To do', priority: 'Low', assignee: 'YK' },
+    { title: 'Update menu prices', description: 'Review ingredient costs and update the prices on the menu.', status: 'To do', priority: 'Medium', assignee: 'AL' },
+    { title: 'Prep weekly menu', description: 'Draft the weekly menu and confirm ingredients and preparation times with the kitchen team.', status: 'In progress', priority: 'High', assignee: 'SM' },
+    { title: 'Inventory check', description: 'Count the ingredients in storage and note any items that need to be reordered.', status: 'In progress', priority: 'Medium', assignee: 'YK' },
+    { title: 'Train new cook', description: 'Walk the new cook through the prep stations, opening checklist, and safety procedures.', status: 'Done', priority: 'Medium', assignee: 'AL' },
+    { title: 'Fix oven timer', description: 'Check the oven timer and test it after the repair.', status: 'Done', priority: 'Low', assignee: 'SM' },
   ],
   5: [
-    { title: 'Update the floor plan', status: 'To do', priority: 'Medium', assignee: 'AL' },
-    { title: 'Prepare the shift schedule', status: 'In progress', priority: 'High', assignee: 'SM' },
-    { title: 'Review customer feedback', status: 'Done', priority: 'Low', assignee: 'YK' },
+    { title: 'Update the floor plan', description: 'Review seating capacity and update the floor plan for the next service.', status: 'To do', priority: 'Medium', assignee: 'AL' },
+    { title: 'Prepare the shift schedule', description: 'Confirm availability and publish the next shift schedule.', status: 'In progress', priority: 'High', assignee: 'SM' },
+    { title: 'Review customer feedback', description: 'Read recent feedback and summarize the issues the team should address.', status: 'Done', priority: 'Low', assignee: 'YK' },
   ],
   4: [
-    { title: 'Plan next month’s campaign', status: 'To do', priority: 'High', assignee: 'SM' },
-    { title: 'Draft the social posts', status: 'In progress', priority: 'Medium', assignee: 'YK' },
+    { title: 'Plan next month’s campaign', description: 'Set campaign goals and outline topics for next month.', status: 'To do', priority: 'High', assignee: 'SM' },
+    { title: 'Draft the social posts', description: 'Write and prepare the posts for the upcoming campaign.', status: 'In progress', priority: 'Medium', assignee: 'YK' },
   ],
   3: [
-    { title: 'Review supplier invoices', status: 'To do', priority: 'High', assignee: 'AL' },
-    { title: 'Prepare the monthly report', status: 'In progress', priority: 'Medium', assignee: 'SM' },
+    { title: 'Review supplier invoices', description: 'Match supplier invoices against orders and flag any differences.', status: 'To do', priority: 'High', assignee: 'AL' },
+    { title: 'Prepare the monthly report', description: 'Summarize monthly spending, revenue, and outstanding payments.', status: 'In progress', priority: 'Medium', assignee: 'SM' },
   ],
   2: [
-    { title: 'Inspect kitchen equipment', status: 'To do', priority: 'Medium', assignee: 'YK' },
-    { title: 'Replace the broken shelf', status: 'Done', priority: 'Low', assignee: 'AL' },
+    { title: 'Inspect kitchen equipment', description: 'Inspect the kitchen equipment and record any maintenance needs.', status: 'To do', priority: 'Medium', assignee: 'YK' },
+    { title: 'Replace the broken shelf', description: 'Replace the damaged shelf and check that it is secure.', status: 'Done', priority: 'Low', assignee: 'AL' },
   ],
   1: [
-    { title: 'Update the onboarding checklist', status: 'In progress', priority: 'Medium', assignee: 'SM' },
-    { title: 'Schedule interviews', status: 'To do', priority: 'High', assignee: 'AL' },
+    { title: 'Update the onboarding checklist', description: 'Review the onboarding steps and update the resources for new hires.', status: 'In progress', priority: 'Medium', assignee: 'SM' },
+    { title: 'Schedule interviews', description: 'Confirm availability with the hiring team and arrange interview times.', status: 'To do', priority: 'High', assignee: 'AL' },
   ],
 }
 
@@ -68,7 +72,26 @@ export default function WorkspaceDetail({ workspace, search }: { workspace: Work
   function addActivity(text: string, detail: string) {
     setTabs((current) => ({ ...current, activity: [{ day: 'Today', text, detail }, ...current.activity] }))
   }
-  const tasks = SAMPLE_TASKS[workspace.id] ?? []
+  const [tasks, setTasks] = useState(() => SAMPLE_TASKS[workspace.id] ?? [])
+  const [selectedTitle, setSelectedTitle] = useState<string>()
+  const taskDialog = useRef<HTMLDialogElement>(null)
+  const selectedTask = tasks.find(({ title }) => title === selectedTitle)
+  const previousStatus = selectedTask?.status === 'Done' ? 'In progress' : 'To do'
+  const nextStatus = selectedTask?.status === 'To do' ? 'In progress' : 'Done'
+
+  function openTask(title: string) {
+    setSelectedTitle(title)
+    taskDialog.current?.showModal()
+  }
+
+  function moveTask(status: Task['status']) {
+    if (!selectedTask || selectedTask.status === status) return
+    setTasks((current) => current.map((task) =>
+      task.title === selectedTask.title ? { ...task, status } : task,
+    ))
+    addActivity(`You moved ${selectedTask.title} to ${status}`, 'Task status changed')
+  }
+
   const query = search.trim().toLowerCase()
   const visibleTasks = tasks.filter(({ title, assignee }) =>
     `${title} ${MEMBER_NAMES[assignee]}`.toLowerCase().includes(query),
@@ -107,12 +130,14 @@ export default function WorkspaceDetail({ workspace, search }: { workspace: Work
                 </h2>
                 <ul className="grid gap-2" role="list">
                   {columnTasks.map(({ title, priority, assignee }) => (
-                    <li key={title} className="rounded-md border border-foreground/10 bg-foreground/5 p-3">
-                      <p className="text-sm">{title}</p>
-                      <div className="mt-2 flex flex-wrap justify-between gap-2 text-xs">
-                        <span className={PRIORITY_COLORS[priority]}>{priority}</span>
-                        <span className="text-muted">{MEMBER_NAMES[assignee]}</span>
-                      </div>
+                    <li key={title}>
+                      <button type="button" onClick={() => openTask(title)} className="w-full cursor-pointer rounded-md border border-foreground/10 bg-foreground/5 p-3 text-left hover:border-primary/60 focus-visible:outline-2 focus-visible:outline-primary">
+                        <span className="block text-sm">{title}</span>
+                        <span className="mt-2 flex flex-wrap justify-between gap-2 text-xs">
+                          <span className={PRIORITY_COLORS[priority]}>{priority}</span>
+                          <span className="text-muted">{MEMBER_NAMES[assignee]}</span>
+                        </span>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -141,6 +166,34 @@ export default function WorkspaceDetail({ workspace, search }: { workspace: Work
           addActivity(activity, 'Membership changed')
         }} />
       )}
+      <dialog ref={taskDialog} aria-labelledby="task-title" className="m-auto w-11/12 max-w-2xl rounded-xl border border-foreground/15 bg-surface p-5 text-foreground backdrop:bg-black/60 sm:p-6">
+        {selectedTask && (
+          <>
+            <header className="mb-4 flex items-start justify-between gap-4">
+              <h2 id="task-title" className="text-xl font-semibold">{selectedTask.title}</h2>
+              <form method="dialog">
+                <button className="cursor-pointer rounded-md px-2 py-1 text-sm text-muted hover:bg-foreground/10">Close</button>
+              </form>
+            </header>
+            <p className="text-sm">{selectedTask.description}</p>
+            <dl className="mt-4 grid gap-2 text-sm">
+              <div className="flex gap-2"><dt className="text-muted">Assignee</dt><dd>{MEMBER_NAMES[selectedTask.assignee]}</dd></div>
+              <div className="flex gap-2"><dt className="text-muted">Priority</dt><dd className={PRIORITY_COLORS[selectedTask.priority]}>{selectedTask.priority}</dd></div>
+              <div className="flex gap-2"><dt className="text-muted">Status</dt><dd role="status">{selectedTask.status}</dd></div>
+            </dl>
+
+            <div className="mt-6 flex justify-between gap-3 border-t border-foreground/10 pt-4">
+              <button type="button" onClick={() => moveTask(previousStatus)} disabled={selectedTask.status === previousStatus} className="cursor-pointer rounded-md border border-foreground/15 px-4 py-2 text-sm hover:bg-foreground/10 disabled:cursor-not-allowed disabled:opacity-50">
+                Back to {previousStatus}
+              </button>
+              <button type="button" onClick={() => moveTask(nextStatus)} disabled={selectedTask.status === nextStatus} className="cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-medium text-background hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50">
+                {selectedTask.status === nextStatus ? 'Done' : `Move to ${nextStatus}`}
+              </button>
+            </div>
+          </>
+        )}
+      </dialog>
+
       {view === 'Activity' && <WorkspaceActivity name={workspace.name} activity={tabs.activity} />}
     </main>
   )
