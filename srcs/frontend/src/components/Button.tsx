@@ -1,23 +1,28 @@
 import type { ButtonHTMLAttributes } from "react";
 
-type Variant = "normal" | "primary" | "secondary" | "danger" | "info";
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: Variant;
-}
+type Variant = "primary" | "secondary";
 
 const variants: Record<Variant, string> = {
-    normal: "bg-surface",
     primary: "bg-primary text-surface",
-    secondary: "border-2 border-foreground"
+    secondary: "bg-background/50 border border-foreground/60 "
 }
 
-function Button({ variant = "normal", type = "button", className = "", ...props }: ButtonProps) {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: keyof typeof variants;
+}
+
+function Button({ variant, type = "button", className = "", ...props }: ButtonProps) {
     return (
         <button
             type={type}
-            className={`cursor-pointer rounded-md px-2.5 py-1.5 transition-colors whitespace-nowrap text-center uppercase ${variants[variant]} ${className}`}
-            {...props} />
+            className={
+                [
+                    "cursor-pointer rounded-md px-2.5 py-1.5 transition-colors whitespace-nowrap text-center uppercase",
+                    variant && variants[variant],
+                    className,
+                ].join(' ')}
+            {...props}
+        />
     )
 }
 

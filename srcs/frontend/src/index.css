@@ -11,7 +11,7 @@
   --color-surface: #1c2131;
   --color-page: #8591ab;
 
-  --color-sucess: #38cea0;
+  --color-success: #38cea0;
   --color-danger: #ff6b76;
   --color-info: #608dee;
 }
@@ -21,3 +21,5 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+@custom-variant tall (@media (min-height: 48rem))
