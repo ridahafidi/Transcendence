@@ -1,9 +1,9 @@
 import * as z from 'zod'
 import { FormEvent, useState } from 'react'
 import { Button, Input } from "@/components";
-import { type signUpInput, signUpSchema } from "@/schema";
+import { type RegisterInput, registerSchema } from "@/schemas";
 
-type Error = Partial<Record<keyof signUpInput, string[]>>
+type Error = Partial<Record<keyof RegisterInput, string[]>>
 
 function SignUpPage() {
     const [errors, setErrors] = useState<Error>({})
@@ -11,10 +11,9 @@ function SignUpPage() {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const result = signUpSchema.safeParse(Object.fromEntries(new FormData(e.currentTarget)))
+        const result = registerSchema.safeParse(Object.fromEntries(new FormData(e.currentTarget)))
         if (!result.success) {
             setErrors(z.flattenError(result.error).fieldErrors)
-            console.log(errors)
             return
         }
         setErrors({})
@@ -22,8 +21,8 @@ function SignUpPage() {
 
     return (
         <>
-            <h1 className="leading-6 text-3xl font-extrabold">Create <span className="text-primary">account</span></h1>
-            <p className="leading-6 text-page">create new account today</p>
+            <h1 className="mt-5 leading-6 text-3xl font-extrabold">Create <span className="text-primary">account</span></h1>
+            <p className="mb-5 leading-6 text-page">create new account today</p>
             <form noValidate className="my-4 flex flex-col gap-3" onSubmit={handleSubmit} >
                 <Input type="email" name="email" placeholder="Login or email" autoComplete="username" errors={errors.email} />
                 <Input type="text" name="username" placeholder="Username" autoComplete="username" errors={errors.username} />
