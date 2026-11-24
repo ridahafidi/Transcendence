@@ -1,4 +1,4 @@
-import { loginSchema } from '../schemas/login.schema.ts';
+import { loginSchema } from '@/modules/auth/schemas/login.schema';
 
 export interface LoginValidationError {
     field: 'email' | 'password' | 'rememberMe' | 'body';

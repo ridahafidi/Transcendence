@@ -1,6 +1,5 @@
-import { oauthConfig }  from '../../../config/oauth.ts';
-import { randomBytes } from 'node:crypto';
-import {find42Account, create42Account} from '../repositories/oauth.repository.ts';
+import { oauthConfig }  from '@/config/oauth';
+import {find42Account, create42Account} from '@/modules/auth/repositories/oauth.repository';
 
 interface TokenResponse {
     access_token : string;

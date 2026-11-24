@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { verifyAccessToken } from '../services/jwt.service.ts';
+import { verifyAccessToken } from '@/modules/auth/services/jwt.service';
 
 export async function authenticate(req: Request, res: Response, next: NextFunction): Promise<void> {
     try

@@ -1,8 +1,8 @@
 import { randomBytes, createHash } from 'node:crypto';
 import { randomUUID } from 'node:crypto';
 import { createRefreshToken as insertRefreshToken, revokeRefreshToken } from '../repositories/refresh-token.repository.ts';
-import { pool } from '../../../config/database.ts';
-import { rotateRefreshToken } from '../repositories/refresh-token.repository.ts';
+import { pool } from '@/config/database';
+import { rotateRefreshToken } from '@/modules/auth/repositories/refresh-token.repository';
 
 interface CreateSessionInput {
     userId: string;

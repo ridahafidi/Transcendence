@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from 'jose';
-import { jwtConfig } from '../../../config/jwt.ts';
+import { jwtConfig } from '@/config/jwt';
 
 export async function signAccessToken(userId: string): Promise<string> {
     return new SignJWT({})

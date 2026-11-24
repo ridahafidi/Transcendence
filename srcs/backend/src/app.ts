@@ -1,18 +1,11 @@
-import { sessionMiddleware } from './config/session.ts';
-import authRoutes from './modules/auth/routes/auth.routes.ts';
+import { sessionMiddleware } from '@/config/session';
+import authRoutes from '@/modules/auth/routes/auth.routes';
 import cookieParser from 'cookie-parser';
-import express, {
-    type Express,
-    type Request,
-    type Response
-} from 'express';
-
-import { pool } from './config/database.ts';
-
-import { authenticate } from './modules/auth/middlewares/authenticate.ts';
+import express, { type Express, type Request, type Response } from 'express';
+import { pool } from '@/config/database';
+import { authenticate } from '@/modules/auth/middlewares/authenticate';
 
 const app: Express = express();
-
 app.use(sessionMiddleware);
 app.use(express.json());
 app.use(cookieParser());
@@ -49,8 +42,4 @@ app.get('/api/v1/test/protected', authenticate, (req, res) => {
     });
 });
 
-const PORT = Number(process.env.PORT ?? 3000);
-
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Backend listening on port ${PORT}`);
-});
+export default app;

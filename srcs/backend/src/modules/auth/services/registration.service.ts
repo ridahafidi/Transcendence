@@ -1,6 +1,6 @@
-import {createUser, findUserByUsernameOrEmail} from '../repositories/user.repository.ts';
-import {hashPassword} from './password.service.ts';
-import {isPasswordCompromised} from './password-policy.service.ts';
+import {createUser, findUserByUsernameOrEmail} from '@/modules/auth/repositories/user.repository';
+import {hashPassword} from '@/modules/auth/services/password.service';
+import {isPasswordCompromised} from '@/modules/auth/services/password-policy.service';
 
 export interface RegisterInput {
     username: string;

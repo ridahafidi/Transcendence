@@ -1,4 +1,4 @@
-import { pool } from '../../../config/database.ts';
+import { pool } from '@/config/database';
 import type { PoolClient } from 'pg';
 
 interface CreateRefreshTokenInput {

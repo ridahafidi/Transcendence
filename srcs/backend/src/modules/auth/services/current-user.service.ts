@@ -1,5 +1,5 @@
-import { findUserById } from '../repositories/user.repository.ts';
-import type { UserProfile } from '../repositories/user.repository.ts';
+import { findUserById } from '@/modules/auth/repositories/user.repository';
+import type { UserProfile } from '@/modules/auth/repositories/user.repository';
 
 export async function getCurrentUser(userId: string): Promise<UserProfile | null> {
     const user = await findUserById(userId);

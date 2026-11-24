@@ -1,8 +1,7 @@
-
-import { pool } from '../config/database.ts';
+import { pool } from '@/config/database';
 import {
     createRefreshSession
-} from '../modules/auth/services/refresh-token.service.ts';
+} from '@/modules/auth/services/refresh-token.service';
 
 const BASE_URL = 'http://localhost:3000';
 
