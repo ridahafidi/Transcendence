@@ -46,4 +46,4 @@ EOSQL
     echo "PostgreSQL initialization complete."
 fi
 
-exec postgres -D "$DATA_DIR"
+exec postgres -c log_min_duration_statement=500 -c log_statement=mod -c log_connections=on -D "$DATA_DIR"
