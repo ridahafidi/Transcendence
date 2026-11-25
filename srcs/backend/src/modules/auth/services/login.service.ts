@@ -1,5 +1,5 @@
-import { findUserByLogin } from '../repositories/user.repository.ts';
-import { verifyPassword } from './password.service.ts';
+import { findUserByLogin } from '@/modules/auth/repositories/user.repository';
+import { verifyPassword } from '@/modules/auth/services/password.service';
 
 export interface LoginInput {
     email: string;

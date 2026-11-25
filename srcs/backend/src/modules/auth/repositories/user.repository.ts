@@ -1,9 +1,10 @@
-import { pool } from '../../../config/database.ts';
+import { pool } from '@/config/database';
 
 export interface CreateUserInput {
     username: string;
     email: string;
     passwordHash: string;
+    badgeColor: string;
 }
 
 export interface CreatedUser {
@@ -13,6 +14,7 @@ export interface CreatedUser {
     display_name: string | null;
     global_role: string;
     created_at: Date;
+    badge_color: string;
 }
 
 export interface LoginUser {
@@ -24,6 +26,7 @@ export interface LoginUser {
     global_role: string;
     created_at: Date;
     is_active: boolean;
+    badge_color: string;
 }
 
 export interface UserProfile {
@@ -34,6 +37,7 @@ export interface UserProfile {
     global_role: string;
     created_at: Date;
     is_active: boolean;
+    badge_color: string;
 }
 
 export async function findUserById(id: string): Promise<UserProfile | null> {
@@ -45,7 +49,8 @@ export async function findUserById(id: string): Promise<UserProfile | null> {
             display_name,
             global_role,
             created_at,
-            is_active
+            is_active,
+            badge_color
          FROM users
          WHERE id = $1
          LIMIT 1`,
@@ -65,7 +70,8 @@ export async function findUserByLogin(identifier: string): Promise<LoginUser | n
             display_name,
             global_role,
             created_at,
-            is_active
+            is_active,
+            badge_color
          FROM users
          WHERE email = $1
          LIMIT 1`,
@@ -81,20 +87,23 @@ export async function createUser(input: CreateUserInput): Promise<CreatedUser> {
             username,
             email,
             password_hash,
-            global_role
+            global_role,
+            badge_color
         )
-        VALUES ($1, $2, $3, 'USER')
+        VALUES ($1, $2, $3, 'USER', $4)
         RETURNING
             id,
             username,
             email,
             display_name,
             global_role,
-            created_at`,
+            created_at,
+            badge_color`,
         [
             input.username,
             input.email,
-            input.passwordHash
+            input.passwordHash,
+            input.badgeColor
         ]
     );
 

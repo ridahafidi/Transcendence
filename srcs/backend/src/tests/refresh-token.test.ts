@@ -1,11 +1,9 @@
-
-import { pool } from '../config/database.ts';
-
+import { pool } from '@/config/database';
 import {
     createRefreshSession,
     hashRefreshToken,
     rotateRefreshSession
-} from '../modules/auth/services/refresh-token.service.ts';
+} from '@/modules/auth/services/refresh-token.service';
 
 async function main() {
     try {

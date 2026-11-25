@@ -1,10 +1,11 @@
-import { pool } from '../../../config/database.ts';
+import { pool } from '@/config/database';
 
 export interface AuthenticatedUser {
     id: string;
     email: string;
     username: string;
     display_name: string | null;
+    badge_color: string;
 }
 
 interface New42Profile{
@@ -21,7 +22,8 @@ export async function find42Account(providerUserId: string): Promise<Authenticat
             users.id,
             users.email,
             users.username,
-            users.display_name
+            users.display_name,
+            users.badge_color
         FROM oauth_accounts
         JOIN users ON oauth_accounts.user_id = users.id
         WHERE oauth_accounts.provider_user_id = $1
@@ -33,6 +35,7 @@ export async function find42Account(providerUserId: string): Promise<Authenticat
 }
 
 export async function create42Account(profile: New42Profile): Promise<AuthenticatedUser> {
+    const badgeColor = `#${Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0')}`;
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
@@ -40,14 +43,15 @@ export async function create42Account(profile: New42Profile): Promise<Authentica
         const displayName = `${profile.first_name} ${profile.last_name}`.trim();
 
         const userResult = await client.query<AuthenticatedUser>(
-            `INSERT INTO users (email, username, display_name, global_role)
-            VALUES ($1, $2, $3, $4)
+            `INSERT INTO users (email, username, display_name, global_role, badge_color)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING id, email, username, display_name` ,
             [
                 profile.email,
                 profile.login,
                 displayName,
-                `USER`
+                `USER`,
+                badgeColor
             ]
         )
 

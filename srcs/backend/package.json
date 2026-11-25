@@ -7,10 +7,11 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-  "dev": "node --watch src/app.ts",
-  "check": "tsc --noEmit",
-  "migrate": "node src/db/migrate.ts",
-  "start:docker": "npm run migrate && npm run dev"
+    "dev": "tsx watch src/server.ts",
+    "check": "tsc --noEmit",
+    "migrate": "tsx src/db/migrate.ts",
+    "start:docker": "npm run migrate && npm run dev",
+    "seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
     "argon2": "^0.45.2",
@@ -20,6 +21,7 @@
     "express-session": "^1.19.0",
     "jose": "^6.2.18",
     "pg": "^8.23.1",
+    "tsx": "^4.23.15",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -28,6 +30,7 @@
     "@types/express-session": "^1.19.0",
     "@types/node": "^22.20.5",
     "@types/pg": "^8.23.1",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }

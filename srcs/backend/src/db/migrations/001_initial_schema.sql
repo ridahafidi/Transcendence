@@ -8,12 +8,12 @@ CREATE TABLE users (
     bio VARCHAR(250),
     global_role VARCHAR(50) NOT NULL DEFAULT 'GUEST'
         CHECK (global_role IN ('ADMIN', 'USER')),
-    status VARCHAR(50) NOT NULL DEFAULT 'OFFLINE'
-        CHECK (status IN ('ONLINE', 'OFFLINE', 'AWAY')),
     last_seen_at TIMESTAMPTZ,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    badge_color VARCHAR (7) NOT NULL
+        CHECK (badge_color ~ '^#[0-9A-Fa-f]{6}$')
 );
 
 CREATE TABLE oauth_accounts (
@@ -38,7 +38,7 @@ CREATE TABLE workspace_members (
     workspace_id BIGINT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     role VARCHAR(50) NOT NULL DEFAULT 'MEMBER'
-        CHECK (role IN ('OWNER', 'MEMBER')),
+        CHECK (role IN ('OWNER', 'MODERATOR','MEMBER')),
     joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (workspace_id, user_id)
 );

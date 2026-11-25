@@ -14,9 +14,12 @@ services:
     ports: [ "5173:5173" ]
 
   backend:
-    build: srcs/backend
+    build:
+      context: ./srcs
+      dockerfile: backend/Dockerfile
     volumes:
       - ./srcs/backend:/app
+      - ./srcs/shared:/app/shared
       - /app/node_modules
     env_file: .env
     ports:

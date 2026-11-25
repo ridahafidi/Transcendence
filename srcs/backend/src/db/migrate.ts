@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { readFile, readdir } from 'node:fs/promises';
-import { pool } from '../config/database.ts';
+import { pool } from '@/config/database';
 
 const migrationsDirectory = new URL('./migrations/', import.meta.url);
 

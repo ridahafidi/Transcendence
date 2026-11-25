@@ -2,11 +2,13 @@ FROM node:26-alpine3.24
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY backend/package*.json ./
 
 RUN npm ci
 
-COPY . .
+COPY backend/ ./
+
+COPY shared/ /app/shared/
 
 EXPOSE 3000
 
