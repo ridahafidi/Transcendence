@@ -8,9 +8,9 @@ const NAV_ITEMS = [
   { label: 'Messages', href: '/messages', icon: 'M21 11a9 9 0 0 1-9 9H8l-5 2 1.5-5A9 9 0 1 1 21 11z' },
   { label: 'Friends', href: '/friends', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0z M22 21v-2a4 4 0 0 0-3-3.9 M17 3.1a4 4 0 0 1 0 7.8' },
   { label: 'Files', icon: 'M6 2h8l5 5v15H6z M14 2v6h5' },
-  { label: 'Analytics', icon: 'M4 21V11 M12 21V4 M20 21v-8' },
-  { label: 'Developer', icon: 'm8 6-6 6 6 6 m8-12 6 6-6 6 M14 2l-4 20' },
-  { label: 'Admin', icon: 'M12 2l9 4v6c0 4-4 8-9 10-5-2-9-6-9-10V6z m-4 10 3 3 5-5' },
+  { label: 'Analytics', href: '/analytics', icon: 'M4 21V11 M12 21V4 M20 21v-8' },
+  { label: 'Developer', href: '/developer', icon: 'm8 6-6 6 6 6 m8-12 6 6-6 6 M14 2l-4 20' },
+  { label: 'Admin', href: '/admin/users', icon: 'M12 2l9 4v6c0 4-4 8-9 10-5-2-9-6-9-10V6z m-4 10 3 3 5-5' },
   { label: 'Settings', href: '/settings', icon: 'm10 2-1 3-2 1-3-1-2 4 2 2v2l-2 2 2 4 3-1 2 1 1 3h4l1-3 2-1 3 1 2-4-2-2v-2l2-2-2-4-3 1-2-1-1-3z M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z' },
 ]
 
@@ -64,7 +64,7 @@ function NotificationButton() {
 }
 
 export default function AppShell({ activePage, search, children }: {
-  activePage?: '/workspaces' | '/friends' | '/messages' | '/settings'
+  activePage?: '/workspaces' | '/friends' | '/messages' | '/settings' | '/analytics' | '/developer' | '/admin/users'
   search: ReactNode
   children: ReactNode
 }) {

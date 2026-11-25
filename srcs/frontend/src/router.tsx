@@ -1,3 +1,5 @@
+import AdminPage from './pages/AdminPage'
+import AnalyticsPage from './pages/AnalyticsPage'
 import FriendsPage from './pages/FriendsPage'
 import MessagesPage from './pages/MessagesPage'
 import ProfilePage from './pages/ProfilePage'
@@ -17,7 +19,6 @@ const router = createBrowserRouter([
         children: [
             { path: '/', element: <MainContent /> },
             { path: '/features', element: <FeaturesPage /> },
-            { path: '/developer', element: <DeveloperPage /> },
         ],
     },
     { path: '/friends', element: <FriendsPage /> },
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
     { path: '/workspaces', element: <WorkspacesPage /> },
     { path: '/workspaces/:workspaceId', element: <WorkspacesPage /> },
     { path: '/dashboard', element: <Dashboard /> },
+    { path: '/analytics', element: <AnalyticsPage /> },
+    { path: '/developer', element: <DeveloperPage /> },
+    { path: '/admin', element: <Navigate to="/admin/users" replace /> },
+    { path: '/admin/users', element: <AdminPage /> },
     { path: '/login', element: <AuthPage /> },
     { path: '/register', element: <AuthPage isRegister /> },
     { path: '/signin', element: <Navigate to="/login" replace /> },
