@@ -1,10 +1,9 @@
 import type { Request, Response } from 'express';
 import { signAccessToken } from '@/modules/auth/services/jwt.service';
-import { createRefreshSession, rotateRefreshSession } from '@/modules/auth/services/refresh-token.service';
-import { validateLoginInput } from '@/modules/auth/services/login.validation';
+import { createRefreshSession } from '@/modules/auth/services/refresh-token.service';
 import { loginUser } from '@/modules/auth/services/login.service';
 import { setAuthCookies } from '@/modules/auth/utils/auth-cookies';
-import type { LoginInput } from '../schemas/login.schema';
+import type { LoginInput } from '@shared/validation/login.schema';
 
 export async function login(req: Request<{}, any, LoginInput>, res: Response): Promise<void> {
     try {

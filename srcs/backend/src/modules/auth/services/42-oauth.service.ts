@@ -1,7 +1,7 @@
 import { oauthConfig }  from '@/config/oauth';
 import {find42Account, create42Account} from '@/modules/auth/repositories/oauth.repository';
-import {oauthProfileSchema, type OAuthProfile} from '@/modules/auth/schemas/oauth-profile.schema';
-import {oauthTokenSchema, type OAuthToken} from '@/modules/auth/schemas/oauth-token.schema';
+import {oauthProfileSchema, type OAuthProfile} from '@shared/validation/oauth-profile.schema';
+import {oauthTokenSchema, type OAuthToken} from '@shared/validation/oauth-token.schema';
 
 export async function resolve42User(profile: OAuthProfile){
     const existingUser = await find42Account(String(profile.id));

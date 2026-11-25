@@ -1,4 +1,4 @@
-import { registerSchema } from '@/modules/auth/schemas/register.schema';
+import { registerSchema } from '@shared/validation/register.schema';
 
 export interface ValidationError {
     field: 'username' | 'email' | 'password' | 'body';
