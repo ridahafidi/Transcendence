@@ -10,7 +10,8 @@
     "dev": "tsx watch src/server.ts",
     "check": "tsc --noEmit",
     "migrate": "tsx src/db/migrate.ts",
-    "start:docker": "npm run migrate && npm run dev"
+    "start:docker": "npm run migrate && npm run dev",
+    "seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
     "argon2": "^0.45.2",
