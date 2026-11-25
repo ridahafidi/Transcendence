@@ -1,5 +1,14 @@
 import { z } from 'zod';
 
+export const passwordSchema = z.string({
+    error: (issue) =>
+        issue.input === undefined
+            ? 'Password is required.'
+            : 'Password must be a string.',
+})
+    .min(12, 'Password must be at least 12 characters long.')
+    .max(128, 'Password must not exceed 128 characters.');
+
 export const registerSchema = z.object({
     username: z.string({
         error: (issue) =>
@@ -26,14 +35,7 @@ export const registerSchema = z.object({
         .max(255, 'Email must not exceed 255 characters.')
         .email('Please provide a valid email address.'),
 
-    password: z.string({
-        error: (issue) =>
-            issue.input === undefined
-                ? 'Password is required.'
-                : 'Password must be a string.',
-    })
-        .min(12, 'Password must be at least 12 characters long.')
-        .max(128, 'Password must not exceed 128 characters.'),
+    password: passwordSchema,
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
