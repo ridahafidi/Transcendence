@@ -9,7 +9,7 @@ const features: Feature[] = [
     { title: "Reliable", text: "Always available." },
 ];
 
-function AuthBrandPanel({ className }: { className: string }) {
+export function AuthBrandPanel({ className }: { className: string }) {
     return (
         <aside
             className={className}
@@ -35,5 +35,3 @@ function AuthBrandPanel({ className }: { className: string }) {
         </aside>
     )
 }
-
-export default AuthBrandPanel;

@@ -11,7 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: keyof typeof variants;
 }
 
-function Button({ variant, type = "button", className = "", ...props }: ButtonProps) {
+export function Button({ variant, type = "button", className = "", ...props }: ButtonProps) {
     return (
         <button
             type={type}
@@ -25,5 +25,3 @@ function Button({ variant, type = "button", className = "", ...props }: ButtonPr
         />
     )
 }
-
-export default Button;

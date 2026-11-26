@@ -4,7 +4,7 @@ interface InputProp extends InputHTMLAttributes<HTMLInputElement> {
     errors?: string[]
 }
 
-function Input({ className = "", errors = [], ...props }: InputProp) {
+export function Input({ className = "", errors = [], ...props }: InputProp) {
     const hasError = errors.length > 0;
 
     return (
@@ -28,5 +28,3 @@ function Input({ className = "", errors = [], ...props }: InputProp) {
         </div>
     )
 }
-
-export default Input;
