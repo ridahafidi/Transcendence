@@ -104,7 +104,7 @@ function ProfileSettingsForm() {
 function LinkedAccounts() {
   return (
     <section className={PANEL}>
-      <h2 className="font-medium">Linked accounts</h2>
+      <h2 className="font-medium">42 linked account</h2>
       <div className="mt-3 flex items-center gap-3">
         <span className="grid size-9 place-items-center rounded-full bg-info text-sm text-background" aria-hidden="true">42</span>
         <div>
@@ -118,37 +118,19 @@ function LinkedAccounts() {
 
 function SecuritySettings() {
   return (
-    <div className="grid items-start gap-4 lg:grid-cols-2">
-      <div className="grid gap-4">
-        <section className={PANEL}>
-          <h2 className="font-medium">Change password</h2>
-          <p id="password-settings-status" className="mt-1 text-sm text-muted">Password updates are unavailable in the preview.</p>
-          <fieldset disabled aria-describedby="password-settings-status" className="mt-4 grid gap-3 opacity-60">
-            {['Current password', 'New password', 'Confirm new password'].map((label) => (
-              <label key={label} className="grid gap-1 text-sm text-muted">
-                {label}
-                <input type="password" className={INPUT} />
-              </label>
-            ))}
-            <button type="button" className={`${PRIMARY} justify-self-start`}>Update password</button>
-          </fieldset>
-        </section>
-        <LinkedAccounts />
-      </div>
-
-      <section className={PANEL}>
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-medium">Two-factor authentication (TOTP)</h2>
-          <span className="rounded-full bg-foreground/5 px-2.5 py-1 text-xs text-danger">Unavailable</span>
-        </div>
-        <p className="mt-4 text-sm text-muted">Your setup QR code and recovery codes will be available when two-factor setup is connected.</p>
-        <label className="mt-4 grid max-w-60 gap-1 text-sm text-muted">
-          Authenticator code
-          <input disabled inputMode="numeric" placeholder="6-digit code" className={INPUT} />
-        </label>
-        <button type="button" disabled className={`${PRIMARY} mt-3`}>Verify and enable</button>
-      </section>
-    </div>
+    <section className={`${PANEL} w-full max-w-4xl sm:p-8`}>
+      <h2 className="text-xl font-medium">Change password</h2>
+      <p id="password-settings-status" className="mt-1 text-sm text-muted">Password updates are unavailable in the preview.</p>
+      <fieldset disabled aria-describedby="password-settings-status" className="mt-5 grid gap-4 opacity-60">
+        {['Current password', 'New password', 'Confirm new password'].map((label) => (
+          <label key={label} className="grid gap-1 text-sm text-muted">
+            {label}
+            <input type="password" className={`${INPUT} min-h-11`} />
+          </label>
+        ))}
+        <button type="button" className={`${PRIMARY} min-h-11 justify-self-start`}>Update password</button>
+      </fieldset>
+    </section>
   )
 }
 
