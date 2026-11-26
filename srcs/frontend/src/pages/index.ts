@@ -1,4 +1,4 @@
-export { LandingPage, MainContent } from "./LandingPage"
-export { default as FeaturesPage } from "./FeaturesPage"
-export { default as DeveloperPage } from "./DeveloperPage"
-export { default as Dashboard } from "./Dashboard"
+export * from "./Dashboard"
+export * from "./LandingPage"
+export * from "./FeaturesPage"
+export * from "./DeveloperPage"

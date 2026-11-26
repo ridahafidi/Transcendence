@@ -1,5 +1,5 @@
 
-export default function FeaturesPage() {
+export function FeaturesPage() {
     return (
         <h1>FeaturesPage PAGE HERE</h1>
     )

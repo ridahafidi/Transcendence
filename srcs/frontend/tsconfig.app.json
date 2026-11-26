@@ -23,7 +23,7 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Custom */
-    "paths": {"@/*": ["./src/*"]},
+    "paths": { "@/*": ["./src/*"] },
     "strict": true,
   },
   "include": ["src"]

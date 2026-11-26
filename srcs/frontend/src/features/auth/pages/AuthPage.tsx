@@ -1,8 +1,8 @@
-import AuthBrandPanel from '@/features/auth/components/AuthBrandPanel'
+import { AuthBrandPanel } from '@/features/auth/components/AuthBrandPanel'
 import { Outlet, NavLink } from 'react-router'
 
 
-export default function AuthPage() {
+export function AuthPage() {
     return (
         <div className="h-screen flex items-center">
             <div className="flex-1 m-[15%] bg-surface px-5 py-8 rounded-2xl">

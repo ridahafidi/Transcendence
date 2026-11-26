@@ -1,9 +1,8 @@
-import { oauthConfig }  from '@/config/oauth';
-import {find42Account, create42Account} from '@/modules/auth/repositories/oauth.repository';
-import {oauthProfileSchema, type OAuthProfile} from '@shared/validation/oauth-profile.schema';
-import {oauthTokenSchema, type OAuthToken} from '@shared/validation/oauth-token.schema';
+import { oauthConfig } from '@/config/oauth';
+import { find42Account, create42Account } from '@/modules/auth/repositories/oauth.repository';
+import { oauthProfileSchema, oauthTokenSchema, type OAuthToken, type OAuthProfile } from '@repo/shared';
 
-export async function resolve42User(profile: OAuthProfile){
+export async function resolve42User(profile: OAuthProfile) {
     const existingUser = await find42Account(String(profile.id));
 
     if (existingUser) {
@@ -21,21 +20,19 @@ export async function exchangeAuthorizationCode(code: string): Promise<OAuthToke
     form.append('client_secret', oauthConfig.clientSecret);
     form.append('code', code);
     form.append('redirect_uri', oauthConfig.redirectUri);
-    
-    
+
+
     const response = await fetch(oauthConfig.tokenUrl, {
-      method: 'POST',
-      body: form
+        method: 'POST',
+        body: form
     })
 
-    let data : unknown;
+    let data: unknown;
 
-    try 
-    {
-        data  = await response.json();
+    try {
+        data = await response.json();
     }
-    catch (error)
-    {
+    catch (error) {
         throw new Error(`42 returned invalid JSON (HTTP ${response.status})`);
     }
     if (!response.ok) {
@@ -50,27 +47,25 @@ export async function exchangeAuthorizationCode(code: string): Promise<OAuthToke
 
 
 
-export async function get42UserProfile(accessToken: string): Promise<OAuthProfile>{
-    const response = await fetch("https://api.intra.42.fr/v2/me",{
+export async function get42UserProfile(accessToken: string): Promise<OAuthProfile> {
+    const response = await fetch("https://api.intra.42.fr/v2/me", {
         headers: {
             'Authorization': `Bearer ${accessToken}`
         }
     })
 
-    let data : unknown;
-    try
-    {
+    let data: unknown;
+    try {
         data = await response.json();
     }
-    catch(error)
-    {
+    catch (error) {
         throw new Error(`42 returned invalid JSON (HTTP ${response.status})`);
     }
-    if (!response.ok){
+    if (!response.ok) {
         throw new Error("Failed to fetch user profile from 42 API");
     }
     let result = oauthProfileSchema.safeParse(data);
-    if (!result.success){ 
+    if (!result.success) {
         throw new Error("42 returned an unexpected user profile response");
     }
     return result.data;

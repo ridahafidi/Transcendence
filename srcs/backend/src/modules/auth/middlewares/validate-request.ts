@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type {Request, Response, NextFunction, RequestHandler} from 'express';
+import type { Request, Response, NextFunction, RequestHandler } from 'express';
 
 export function validateRequest<T extends z.ZodType>(schema: T): RequestHandler {
     function middleware(req: Request, res: Response, next: NextFunction): void {

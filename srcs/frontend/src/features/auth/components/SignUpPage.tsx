@@ -1,11 +1,11 @@
 import * as z from 'zod'
 import { FormEvent, useState } from 'react'
 import { Button, Input } from "@/components";
-import { type RegisterInput, registerSchema } from "@/schemas";
+import { type RegisterInput, registerSchema } from "@repo/shared";
 
 type Error = Partial<Record<keyof RegisterInput, string[]>>
 
-function SignUpPage() {
+export function SignUpPage() {
     const [errors, setErrors] = useState<Error>({})
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -49,5 +49,3 @@ function SignUpPage() {
         </>
     )
 }
-
-export default SignUpPage;

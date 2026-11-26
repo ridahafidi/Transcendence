@@ -22,7 +22,7 @@
     "jose": "^6.2.18",
     "pg": "^8.23.1",
     "tsx": "^4.23.15",
-    "zod": "^4.6.7"
+    "@repo/shared": "file:shared"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
