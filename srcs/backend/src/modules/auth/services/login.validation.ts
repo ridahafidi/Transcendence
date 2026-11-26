@@ -1,4 +1,4 @@
-import { loginSchema } from '@shared/validation/login.schema';
+import { loginSchema } from '@repo/shared';
 
 export interface LoginValidationError {
     field: 'email' | 'password' | 'rememberMe' | 'body';

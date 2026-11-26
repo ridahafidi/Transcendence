@@ -3,12 +3,11 @@ FROM node:26-alpine3.24
 WORKDIR /app
 
 COPY backend/package*.json ./
+COPY shared shared/
 
-RUN npm ci
+RUN npm install --install-links=true
 
-COPY backend/ ./
-
-COPY shared/ /app/shared/
+COPY backend ./
 
 EXPOSE 3000
 

@@ -2,10 +2,13 @@ FROM node:26-alpine3.24
 
 WORKDIR /app
 
-COPY package*.json .
+COPY frontend/package*.json ./
+COPY shared shared/
 
-RUN npm ci
+RUN npm install --install-links=true
 
-COPY . .
+COPY frontend .
+
+EXPOSE 5173
 
 ENTRYPOINT npm run dev -- --host 0.0.0.0

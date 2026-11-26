@@ -3,7 +3,7 @@ import { signAccessToken } from '@/modules/auth/services/jwt.service';
 import { createRefreshSession } from '@/modules/auth/services/refresh-token.service';
 import { loginUser } from '@/modules/auth/services/login.service';
 import { setAuthCookies } from '@/modules/auth/utils/auth-cookies';
-import type { LoginInput } from '@shared/validation/login.schema';
+import type { LoginInput } from '@repo/shared';
 
 export async function login(req: Request<{}, any, LoginInput>, res: Response): Promise<void> {
     try {
@@ -11,7 +11,7 @@ export async function login(req: Request<{}, any, LoginInput>, res: Response): P
             email: req.body.email,
             password: req.body.password
         });
-        
+
         if (!user) {
             res.status(401).json({
                 message: 'Invalid email or password.'

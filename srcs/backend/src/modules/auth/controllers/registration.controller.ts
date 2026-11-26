@@ -3,7 +3,7 @@ import { signAccessToken } from '@/modules/auth/services/jwt.service';
 import { createRefreshSession } from '@/modules/auth/services/refresh-token.service';
 import { registerUser } from '@/modules/auth/services/registration.service';
 import { setAuthCookies } from '@/modules/auth/utils/auth-cookies';
-import type { RegisterInput } from '@shared/validation/register.schema';
+import type { RegisterInput } from '@repo/shared';
 
 export async function register(req: Request<{}, any, RegisterInput>, res: Response): Promise<void> {
     try {

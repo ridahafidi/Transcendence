@@ -7,7 +7,9 @@ services:
       - backend
 
   frontend:
-    build: srcs/frontend
+    build:
+      context: srcs/
+      dockerfile: frontend/Dockerfile
     volumes:
       - ./srcs/frontend:/app
       - /app/node_modules
@@ -15,15 +17,13 @@ services:
 
   backend:
     build:
-      context: ./srcs
+      context: srcs/
       dockerfile: backend/Dockerfile
     volumes:
       - ./srcs/backend:/app
-      - ./srcs/shared:/app/shared
       - /app/node_modules
     env_file: .env
-    ports:
-      - "3000:3000"
+    ports: [ "3000:3000" ]
     depends_on:
       db:
         condition: service_healthy

@@ -6,9 +6,7 @@ import { register } from '@/modules/auth/controllers/registration.controller';
 import { login } from '@/modules/auth/controllers/login.controller';
 import { getMe } from '@/modules/auth/controllers/current-user.controller';
 import { validateRequest } from '@/modules/auth/middlewares/validate-request';
-import { registerSchema } from '@shared/validation/register.schema';
-import { loginSchema } from '@shared/validation/login.schema';
-
+import { registerSchema, loginSchema } from '@repo/shared';
 
 const router = Router();
 
