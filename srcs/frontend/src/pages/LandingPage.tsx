@@ -82,7 +82,7 @@ export function MainContent() {
             real-time workspace your whole team can use at the same time.
           </p>
           <div className="flex gap-2 w-full max-w-md">
-            <Link className="flex-1 font-medium bg-surface text-center p-2 rounded-md" to="/signin42">Continue with 42</Link>
+            <Link className="flex-1 font-medium bg-surface text-center p-2 rounded-md" href="/api/v1/auth/42">Continue with 42</Link>
             <Link className="flex-1 font-medium bg-primary text-surface text-center p-2 rounded-md" to="/signup">Get Started</Link>
           </div>
         </section>

@@ -1,6 +1,8 @@
-import { AuthPage, SignInPage, SignUpPage } from '@/features'
-import { DeveloperPage, FeaturesPage, LandingPage, MainContent } from '@/pages'
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter } from 'react-router';
+import { AuthPage, SignInPage, SignUpPage } from '@/features';
+import { ProtectedRoute } from '@/features/auth/components/ProtectedRoute';
+import { GuestOnlyRoute } from '@/features/auth/components/GuestOnlyRoute';
+import { Dashboard, DeveloperPage, FeaturesPage, LandingPage, MainContent } from '@/pages';
 
 const router = createBrowserRouter([
     {
@@ -12,12 +14,22 @@ const router = createBrowserRouter([
         ],
     },
     {
-        element: <AuthPage />,
+        element: <GuestOnlyRoute />,
         children: [
-            { path: '/signin', element: <SignInPage /> },
-            { path: '/signup', element: <SignUpPage /> },
-        ]
+            {
+                element: <AuthPage />,
+                children: [
+                    { path: '/signin', element: <SignInPage /> },
+                    { path: '/signup', element: <SignUpPage /> },
+                ],
+            },
+        ],
     },
-])
-
+    {
+        element: <ProtectedRoute />,
+        children: [
+            { path: '/dashboard', element: <Dashboard /> }
+        ],
+    },
+]);
 export default router;
